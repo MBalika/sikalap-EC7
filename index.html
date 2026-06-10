@@ -600,7 +600,7 @@ function renderSoilProfile(){
     rows+=`<tr data-i="${i}">`;
     rows+=`<td style="text-align:center;font-weight:600;color:var(--steel-dk)">${i+1}</td>`;
     cols.forEach(([k,,t])=>{
-      rows+=`<td><input data-i="${i}" data-k="${k}"${t==='num'?' inputmode="decimal"':''} type="${t==='num'?'number':'text'}" value="${L[k]}" step="${STEP[k]||'0.1'}" style="width:100%;min-width:${k==='name'?'108':'56'}px;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
+      rows+=`<td style="padding:6px 6px"><input data-i="${i}" data-k="${k}"${t==='num'?' inputmode="decimal"':''} type="${t==='num'?'number':'text'}" value="${L[k]}" step="${STEP[k]||'0.1'}" style="width:100%;min-width:${k==='name'?'108':'58'}px;border:1px solid var(--line-strong);border-radius:5px;padding:4px 4px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'center':'left'};background:var(--calc-input)"></td>`;
     });
     rows+=`<td style="text-align:center"><button data-del="${i}" style="background:var(--rebar);color:#fff;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;font-weight:700" title="Réteg törlése">×</button></td>`;
     rows+='</tr>';
@@ -615,7 +615,7 @@ function renderSoilProfile(){
       </div>
       <div style="overflow-x:auto">
       <table class="dt" style="font-size:0.82rem;margin:0">
-        <thead><tr><th>#</th>${cols.map(c=>`<th style="text-align:${c[2]==='num'?'right':'left'}">${S(c[1])}</th>`).join('')}<th></th></tr></thead>
+        <thead><tr><th style="text-align:center;padding:9px 6px">#</th>${cols.map(c=>`<th style="text-align:${c[2]==='num'?'center':'left'};padding:9px 6px">${S(c[1])}</th>`).join('')}<th style="padding:9px 6px"></th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
       </div>
