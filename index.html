@@ -543,8 +543,8 @@ const GW_DENS=10;  /* a víz térfogatsúlya rögzített: 10 kN/m³ */
 const SOIL={
   D:1.2, gw:3.5, gammaW:GW_DENS,
   layers:[
-    {name:'Iszapos homok', t:2.4, gm:18, gs:20, phi:30, c:5, cu:120, E:25, nu:0.30, qc:8},
-    {name:'Kavicsos homok', t:6.0, gm:19, gs:21, phi:34, c:0, cu:0, E:45, nu:0.28, qc:16},
+    {name:'Iszapos homok', t:2.4, gm:18, gs:20, phi:30, c:5, cu:120, E:25},
+    {name:'Kavicsos homok', t:6.0, gm:19, gs:21, phi:34, c:0, cu:0, E:45},
   ],
   _subs:[],
 };
@@ -574,8 +574,8 @@ function baseLayer(){return layerAt(SOIL.D+1e-3);}
 /* ===================== TALAJSZELVÉNY UI ===================== */
 function renderSoilProfile(){
   const host=document.getElementById('soilProfileHost'); if(!host)return;
-  const cols=[['name','Megnevezés','text'],['t','t [m]','num'],['gm','γ','num'],['gs','γ_sat','num'],['phi','φ′ [°]','num'],['c','c′','num'],['cu','c_u','num'],['E','E [MPa]','num'],['nu','ν','num'],['qc','q_c [MPa]','num']];
-  const STEP={t:0.1,gm:0.1,gs:0.1,phi:0.5,c:1,cu:1,E:1,nu:0.05,qc:0.5};
+  const cols=[['name','Megnevezés','text'],['t','t [m]','num'],['gm','γ','num'],['gs','γ_sat','num'],['phi','φ′ [°]','num'],['c','c′','num'],['cu','c_u','num'],['E','E [MPa]','num']];
+  const STEP={t:0.1,gm:0.1,gs:0.1,phi:0.5,c:1,cu:1,E:1};
   let rows='';
   SOIL.layers.forEach((L,i)=>{
     rows+=`<tr data-i="${i}">`;
@@ -609,7 +609,7 @@ function renderSoilProfile(){
   document.getElementById('sp-D').addEventListener('input',e=>{SOIL.D=parseFloat(String(e.target.value).replace(',','.'))||0;soilNotify();renderSoilDerived();});
   document.getElementById('sp-gw').addEventListener('input',e=>{SOIL.gw=parseFloat(String(e.target.value).replace(',','.'))||0;soilNotify();renderSoilDerived();});
   SOIL.gammaW=GW_DENS; /* mindig 10 kN/m³ */
-  document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20,nu:0.3,qc:5});renderSoilProfile();soilNotify();renderSoilDerived();});
+  document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20});renderSoilProfile();soilNotify();renderSoilDerived();});
 }
 function renderSoilDerived(){
   const host=document.getElementById('soilDerivedHost'); if(!host)return;
