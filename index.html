@@ -599,7 +599,7 @@ function renderSoilProfile(){
     rows+=`<tr data-i="${i}">`;
     rows+=`<td style="text-align:center;font-weight:600;color:var(--steel-dk)">${i+1}</td>`;
     cols.forEach(([k,,t])=>{
-      rows+=`<td><input data-i="${i}" data-k="${k}" type="${t==='num'?'number':'text'}" value="${L[k]}" step="${k==='t'?'0.1':'any'}" style="width:100%;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
+      rows+=`<td><input data-i="${i}" data-k="${k}"${t==='num'?' inputmode="decimal"':''} type="${t==='num'?'number':'text'}" value="${L[k]}" step="${k==='t'?'0.1':'0.01'}" style="width:100%;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
     });
     rows+=`<td style="text-align:center"><button data-del="${i}" style="background:var(--rebar);color:#fff;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;font-weight:700" title="Réteg törlése">×</button></td>`;
     rows+='</tr>';
@@ -609,8 +609,8 @@ function renderSoilProfile(){
     <div class="calc-head"><h3>Rétegrend, talajvíz, alapozási mélység</h3></div>
     <div class="calc-body">
       <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px">
-        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" value="${SOIL.D}" step="0.1"></div>
-        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Mértékadó talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" value="${SOIL.gw}" step="0.1"></div>
+        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" inputmode="decimal" value="${SOIL.D}" step="0.01"></div>
+        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Mértékadó talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" inputmode="decimal" value="${SOIL.gw}" step="0.01"></div>
       </div>
       <div style="overflow-x:auto">
       <table class="dt" style="font-size:0.82rem;margin:0">
@@ -622,10 +622,10 @@ function renderSoilProfile(){
       <span style="font-size:0.8rem;color:var(--ink-mute);margin-left:12px">γ = nedves térfogatsúly, γ<sub>sat</sub> = telített [kN/m³]; c′, c<sub>u</sub> [kPa]. Ami nem értelmezett egy rétegnél (pl. c<sub>u</sub> szemcsésnél), hagyd 0-n.</span></div>
     </div>
   </div>`;
-  host.querySelectorAll('input[data-k]').forEach(el=>el.addEventListener('input',()=>{const i=+el.dataset.i,k=el.dataset.k;SOIL.layers[i][k]=(el.type==='number'?(parseFloat(el.value)||0):el.value);soilNotify();renderSoilDerived();}));
+  host.querySelectorAll('input[data-k]').forEach(el=>el.addEventListener('input',()=>{const i=+el.dataset.i,k=el.dataset.k;SOIL.layers[i][k]=(el.type==='number'?(parseFloat(String(el.value).replace(',','.'))||0):el.value);soilNotify();renderSoilDerived();}));
   host.querySelectorAll('button[data-del]').forEach(b=>b.addEventListener('click',()=>{if(SOIL.layers.length<=1)return;SOIL.layers.splice(+b.dataset.del,1);renderSoilProfile();soilNotify();renderSoilDerived();}));
-  document.getElementById('sp-D').addEventListener('input',e=>{SOIL.D=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
-  document.getElementById('sp-gw').addEventListener('input',e=>{SOIL.gw=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
+  document.getElementById('sp-D').addEventListener('input',e=>{SOIL.D=parseFloat(String(e.target.value).replace(',','.'))||0;soilNotify();renderSoilDerived();});
+  document.getElementById('sp-gw').addEventListener('input',e=>{SOIL.gw=parseFloat(String(e.target.value).replace(',','.'))||0;soilNotify();renderSoilDerived();});
   SOIL.gammaW=GW_DENS; /* mindig 10 kN/m³ */
   document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20,nu:0.3,qc:5,EM:6});renderSoilProfile();soilNotify();renderSoilDerived();});
 }
@@ -739,7 +739,7 @@ function mkCalc(c){
     if(f.sep)return `<div class="cr-sep">${S(f.sep)}</div>`;
     const lab=`<label>${S(f.label)}${f.small?`<small>${S(f.small)}</small>`:''}</label>`;
     if(f.type==='select')return `<div class="cr"><div>${lab}</div><select id="${c.id}__${f.k}">${f.options.map(o=>`<option value="${o.v}">${S(o.t)}</option>`).join('')}</select></div>`;
-    return `<div class="cr"><div>${lab}</div><input id="${c.id}__${f.k}" type="number" value="${f.val}" step="${f.step||'any'}"></div>`;
+    return `<div class="cr"><div>${lab}</div><input id="${c.id}__${f.k}" type="number" inputmode="decimal" value="${f.val}" step="0.01"></div>`;
   }).join('');
   host.innerHTML=`
   <div class="calc-head"><h3>${S(c.title)}</h3><span class="calc-tag" style="background:${c.color||'var(--rebar)'}">${c.tag||''}</span></div>
@@ -753,7 +753,7 @@ function mkCalc(c){
   </div>`;
   // set select defaults
   c.inputs.forEach(f=>{if(f.type==='select'){const e=document.getElementById(c.id+'__'+f.k);if(e&&f.val!==undefined)e.value=f.val;}});
-  const g=k=>{const e=document.getElementById(c.id+'__'+k);if(!e)return 0;return e.tagName==='SELECT'?e.value:(parseFloat(e.value)||0);};
+  const g=k=>{const e=document.getElementById(c.id+'__'+k);if(!e)return 0;return e.tagName==='SELECT'?e.value:(parseFloat(String(e.value).replace(',','.'))||0);};
   function run(){
     let r;try{r=c.compute(g);}catch(e){console.error(e);r={rows:[['Hiba','—']]};}
     let h=`<h4>${S(r.title||'Eredmény')}</h4>`;
