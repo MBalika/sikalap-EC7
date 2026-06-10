@@ -707,8 +707,8 @@ function svgSection(p){
 /* alaprajz: hatékony terület. p:{B,L,strip,circ,eB,eL,Bp,Lp,D} */
 function svgPlan(p){
   const W=470,Ht=340,cx=W/2,cy=Ht/2;
-  const md=Math.max(p.B,p.L,p.circ?p.B:0,0.1);
-  const sc=Math.min((W-150)/md,(Ht-110)/md);
+  const md=Math.max(p.B||0,p.L||0,0.3);
+  const sc=Math.min((W-150)/md,(Ht-110)/md,150);
   let s=`<svg viewBox="0 0 ${W} ${Ht}" font-family="Inter,system-ui,sans-serif">${SVGDEFS}`;
   if(p.circ){const R=p.B/2*sc;s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="#EDE6D8" stroke="#7C5A38" stroke-width="1.6"/>`;
     const bw=p.Bp*sc,bl=p.Lp*sc,ox=cx+(p.eB||0)*sc;
