@@ -657,13 +657,13 @@ function dBox(lab,val,acc){return `<div style="background:#F3EEE6;padding:12px 1
 /* ===================== SVG ÁBRÁK ===================== */
 const SOILPAL=['#E2D4B6','#D4C29A','#C6B080','#B89E68','#AA8E56','#9C8048'];
 function esc(t){return (''+t).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
-const SVGDEFS=`<defs>
-  <marker id="aL" markerWidth="11" markerHeight="11" refX="8" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#C0512A"/></marker>
-  <marker id="aD" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#6B6052"/></marker>
-  <marker id="aDs" markerWidth="9" markerHeight="9" refX="2" refY="4.5" orient="auto-start-reverse"><path d="M9,0 L0,4.5 L9,9 z" fill="#6B6052"/></marker>
-</defs>`;
-function dimV(x,y1,y2,label){const ym=(y1+y2)/2;return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="#6B6052" stroke-width="1" marker-start="url(#aDs)" marker-end="url(#aD)"/><line x1="${x-4}" y1="${y1}" x2="${x+4}" y2="${y1}" stroke="#6B6052" stroke-width="0.8"/><line x1="${x-4}" y1="${y2}" x2="${x+4}" y2="${y2}" stroke="#6B6052" stroke-width="0.8"/><text x="${x-6}" y="${ym}" font-size="10.5" fill="#3A2A1A" transform="rotate(-90 ${x-6} ${ym})" text-anchor="middle">${label}</text>`;}
-function dimH(x1,x2,y,label){const xm=(x1+x2)/2;return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#6B6052" stroke-width="1" marker-start="url(#aDs)" marker-end="url(#aD)"/><line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}" stroke="#6B6052" stroke-width="0.8"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}" stroke="#6B6052" stroke-width="0.8"/><text x="${xm}" y="${y+13}" font-size="10.5" fill="#3A2A1A" text-anchor="middle">${label}</text>`;}
+const SVGDEFS='';
+/* nyílhegy (x,y) pontban, ang irányba */
+function ah(x,y,ang,col,L){L=L||9;const a=0.42;const xa=x-L*Math.cos(ang-a),ya=y-L*Math.sin(ang-a),xb=x-L*Math.cos(ang+a),yb=y-L*Math.sin(ang+a);return `<path d="M${x.toFixed(1)},${y.toFixed(1)} L${xa.toFixed(1)},${ya.toFixed(1)} L${xb.toFixed(1)},${yb.toFixed(1)} z" fill="${col}"/>`;}
+/* vonal + nyílhegy a végén */
+function arrow(x1,y1,x2,y2,col,w){return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${col}" stroke-width="${w}"/>`+ah(x2,y2,Math.atan2(y2-y1,x2-x1),col,9);}
+function dimV(x,y1,y2,label){const ym=(y1+y2)/2,c='#6B6052';return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${c}" stroke-width="1"/>`+ah(x,y1,-Math.PI/2,c,7)+ah(x,y2,Math.PI/2,c,7)+`<line x1="${x-4}" y1="${y1}" x2="${x+4}" y2="${y1}" stroke="${c}" stroke-width="0.8"/><line x1="${x-4}" y1="${y2}" x2="${x+4}" y2="${y2}" stroke="${c}" stroke-width="0.8"/><text x="${x-6}" y="${ym}" font-size="10.5" fill="#3A2A1A" transform="rotate(-90 ${x-6} ${ym})" text-anchor="middle">${label}</text>`;}
+function dimH(x1,x2,y,label){const xm=(x1+x2)/2,c='#6B6052';return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${c}" stroke-width="1"/>`+ah(x1,y,Math.PI,c,7)+ah(x2,y,0,c,7)+`<line x1="${x1}" y1="${y-4}" x2="${x1}" y2="${y+4}" stroke="${c}" stroke-width="0.8"/><line x1="${x2}" y1="${y-4}" x2="${x2}" y2="${y+4}" stroke="${c}" stroke-width="0.8"/><text x="${xm}" y="${y+13}" font-size="10.5" fill="#3A2A1A" text-anchor="middle">${label}</text>`;}
 
 /* keresztmetszet: rétegek + alapsík + B + terhek. p:{B,strip,eB,V,H,D1,zInf,cap} */
 function svgSection(p){
@@ -686,17 +686,18 @@ function svgSection(p){
     s+=`<path d="M${plotL+20},${yw-10} l11,0 l-5.5,10 z" fill="#2E7D8A"/><text x="${plotL+36}" y="${yw-3}" font-size="10" fill="#2E7D8A">TVSZ ${fmt(gw,1)} m</text>`;}
   const hSc=Math.min(vSc,(plotR-plotL)*0.46/Math.max(p.B,0.1));
   const Bpx=Math.max(Math.min(p.B*hSc,250),26),eOff=Math.max(Math.min((p.eB||0)*hSc,Bpx/2-4),-(Bpx/2-4));
-  const tf=Math.max(0.35*vSc,12),fx=cx-Bpx/2,fyB=Y(D),fyT=fyB-tf,colW=Math.max(Bpx*0.26,15);
-  s+=`<rect x="${cx-colW/2}" y="${Y(0)-1}" width="${colW}" height="${fyT-Y(0)+1}" fill="#A7ADB3" stroke="#5A5F64" stroke-width="1"/>`;
-  s+=`<rect x="${fx}" y="${fyT}" width="${Bpx}" height="${tf}" fill="#BEC2C6" stroke="#5A5F64" stroke-width="1.3"/>`;
-  s+=dimV(fx-20,Y(0),fyB,`D = ${fmt(D,2)} m`);
+  const fx=cx-Bpx/2,fyT=Y(0),fyB=Y(D);
+  /* teljes magasságú alaptest a terepszinttől az alapsíkig (D) */
+  s+=`<rect x="${fx}" y="${fyT}" width="${Bpx}" height="${fyB-fyT}" fill="#C4C8CC" stroke="#5A5F64" stroke-width="1.4"/>`;
+  s+=`<line x1="${fx}" y1="${fyT}" x2="${fx+Bpx}" y2="${fyT}" stroke="#5A5F64" stroke-width="2.4"/>`;
+  s+=dimV(fx-20,fyT,fyB,`D = ${fmt(D,2)} m`);
   s+=dimH(fx,fx+Bpx,fyB+24,`B = ${fmt(p.B,2)} m`);
   if(p.zInf){const yz=Y(D+p.zInf);s+=`<line x1="${fx}" y1="${yz}" x2="${fx+Bpx}" y2="${yz}" stroke="#5C7A52" stroke-width="1.2" stroke-dasharray="4 3"/><text x="${fx+Bpx+4}" y="${yz+3}" font-size="9.5" fill="#3E5A1F">befolyásmélység</text>`;}
   if(p.D1){const yd=Y(D+p.D1);s+=`<line x1="${fx-6}" y1="${yd}" x2="${fx+Bpx+6}" y2="${yd}" stroke="#8F3A1B" stroke-width="1.2" stroke-dasharray="5 3"/><text x="${fx+Bpx+9}" y="${yd+3}" font-size="10" fill="#8F3A1B">D₁</text>`;}
   const lx=cx+eOff;
-  if(p.V){s+=`<line x1="${lx}" y1="${Y(0)-46}" x2="${lx}" y2="${Y(0)-3}" stroke="#C0512A" stroke-width="3" marker-end="url(#aL)"/><text x="${lx+7}" y="${Y(0)-31}" font-size="11" font-weight="700" fill="#8F3A1B">V=${fmt(p.V,0)} kN</text>`;}
-  if(Math.abs(eOff)>1.5){s+=`<line x1="${cx}" y1="${Y(0)-3}" x2="${cx}" y2="${Y(0)-52}" stroke="#6B6052" stroke-width="0.8" stroke-dasharray="3 3"/><text x="${(cx+lx)/2}" y="${Y(0)-55}" font-size="9" fill="#6B6052" text-anchor="middle">e=${fmt(p.eB,2)}</text>`;}
-  if(p.H){const hy=fyT-3;s+=`<line x1="${lx-48}" y1="${hy}" x2="${lx-3}" y2="${hy}" stroke="#C0512A" stroke-width="3" marker-end="url(#aL)"/><text x="${lx-48}" y="${hy-5}" font-size="11" font-weight="700" fill="#8F3A1B">H=${fmt(p.H,0)} kN</text>`;}
+  if(p.V){s+=arrow(lx,fyT-48,lx,fyT-2,'#C0512A',3)+`<text x="${lx+7}" y="${fyT-30}" font-size="11" font-weight="700" fill="#8F3A1B">V=${fmt(p.V,0)} kN</text>`;}
+  if(Math.abs(eOff)>1.5){s+=`<line x1="${cx}" y1="${fyT-2}" x2="${cx}" y2="${fyT-54}" stroke="#6B6052" stroke-width="0.8" stroke-dasharray="3 3"/><text x="${(cx+lx)/2}" y="${fyT-57}" font-size="9" fill="#6B6052" text-anchor="middle">e=${fmt(p.eB,2)}</text>`;}
+  if(p.H){const hy=fyT+11;s+=arrow(fx-48,hy,fx-1,hy,'#C0512A',3)+`<text x="${fx-48}" y="${hy-5}" font-size="11" font-weight="700" fill="#8F3A1B">H=${fmt(p.H,0)} kN</text>`;}
   s+=`</svg>`;
   return `<figure>${s}<figcaption>${p.cap||'Vázlatos keresztmetszet a megadott rétegekből, alapsíkból (D), szélességből (B) és terhekből — élő frissítéssel.'}</figcaption></figure>`;
 }
