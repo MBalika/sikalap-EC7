@@ -337,15 +337,6 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
     <div class="calc" id="calc-bear-punch"></div>
   </section>
 
-  <section class="subsection" id="b-6">
-    <h2>Teherbírás Ménard-presszióméterből <span class="refbadge">B.6 (B.7)</span></h2>
-    <p>A presszióméteres mérésekből a teherbírás a nettó határnyomásból (p*<sub>LM,e</sub>) és a k<sub>p</sub> teherbírási tényezőből számítható.</p>
-    <div class="callout formula">
-      R<sub>N</sub>/A′ = σ<sub>v0</sub> + k<sub>p</sub>·p*<sub>LM,e</sub> &nbsp;(B.7) &nbsp;&nbsp;|&nbsp;&nbsp; p*<sub>LM,e</sub> = a nettó határnyomás mértani közepe 1,5·B mélységben (B.8)
-    </div>
-    <div class="calc" id="calc-bear-menard"></div>
-  </section>
-
   <section class="subsection" id="b-7">
     <h2>Teherbírás sziklatömbön — ékegyensúly (Hoek–Brown) <span class="refbadge">B.16 (B.23)</span></h2>
     <p>Folytonos közegként viselkedő sziklatömbön a teherbírás a Hoek–Brown burkológörbével:</p>
@@ -407,16 +398,6 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
       </tbody>
     </table>
     <div class="calc" id="calc-set-elastic"></div>
-  </section>
-
-  <section class="subsection" id="s-2">
-    <h2>Süllyedés Ménard-presszióméterből <span class="refbadge">B.12 (B.12)</span></h2>
-    <p>Merev alapra a presszióméteres (Ménard) süllyedés a deviátoros és gömbi tagból:</p>
-    <div class="callout formula" style="text-align:center">
-      s = (q−σ<sub>v0</sub>)·[ (2·B<sub>0</sub>/(9·E<sub>d</sub>))·(λ<sub>d</sub>·B/B<sub>0</sub>)<sup>α</sup> + α·λ<sub>c</sub>·B/(9·E<sub>c</sub>) ] &nbsp;<span style="color:var(--ink-mute)">(B.12)</span>
-    </div>
-    <p style="font-size:0.88rem;color:var(--ink-mute)">B<sub>0</sub>=0,6&nbsp;m referenciaszélesség; α reológiai tényező (B.5 tábla); λ<sub>c</sub>, λ<sub>d</sub> alaktényezők (B.4 tábla).</p>
-    <div class="calc" id="calc-set-menard"></div>
   </section>
 
   <section class="subsection" id="s-3">
@@ -526,9 +507,9 @@ const CHAPTERS = [
   {id:'bevezetes', label:'Bevezetés', subsections:[{id:'bev-1',label:'Használat'},{id:'bev-2',label:'Tervezés alapja'}]},
   {id:'talaj', label:'Talajszelvény', subsections:[]},
   {id:'geometria', label:'Geometria', subsections:[{id:'g-1',label:'Hatékony km.'},{id:'g-2',label:'Kör alap'},{id:'g-3',label:'Tervezési méret'},{id:'g-4',label:'SLS külpont.'}]},
-  {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-2',label:'Drénezett'},{id:'b-1',label:'Drénezetlen'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-6',label:'Ménard'},{id:'b-7',label:'Szikla'}]},
+  {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-2',label:'Drénezett'},{id:'b-1',label:'Drénezetlen'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-7',label:'Szikla'}]},
   {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-2',label:'Drénezett'},{id:'c-1',label:'Drénezetlen'},{id:'c-3',label:'VC4'}]},
-  {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-2',label:'Ménard'},{id:'s-3',label:'CPT'}]},
+  {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-3',label:'CPT'}]},
   {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'},{id:'i-4',label:'Feltárás'}]},
   {id:'merevseg', label:'Merevség & rugók', subsections:[{id:'m-1',label:'Relatív mer.'},{id:'m-2',label:'Ágyazási t.'},{id:'m-3',label:'Rugók'}]},
 ];
@@ -562,8 +543,8 @@ const GW_DENS=10;  /* a víz térfogatsúlya rögzített: 10 kN/m³ */
 const SOIL={
   D:1.2, gw:3.5, gammaW:GW_DENS,
   layers:[
-    {name:'Iszapos homok', t:2.4, gm:18, gs:20, phi:30, c:5, cu:120, E:25, nu:0.30, qc:8, EM:9},
-    {name:'Kavicsos homok', t:6.0, gm:19, gs:21, phi:34, c:0, cu:0, E:45, nu:0.28, qc:16, EM:18},
+    {name:'Iszapos homok', t:2.4, gm:18, gs:20, phi:30, c:5, cu:120, E:25, nu:0.30, qc:8},
+    {name:'Kavicsos homok', t:6.0, gm:19, gs:21, phi:34, c:0, cu:0, E:45, nu:0.28, qc:16},
   ],
   _subs:[],
 };
@@ -593,8 +574,8 @@ function baseLayer(){return layerAt(SOIL.D+1e-3);}
 /* ===================== TALAJSZELVÉNY UI ===================== */
 function renderSoilProfile(){
   const host=document.getElementById('soilProfileHost'); if(!host)return;
-  const cols=[['name','Megnevezés','text'],['t','t [m]','num'],['gm','γ','num'],['gs','γ_sat','num'],['phi','φ′ [°]','num'],['c','c′','num'],['cu','c_u','num'],['E','E [MPa]','num'],['nu','ν','num'],['qc','q_c [MPa]','num'],['EM','E_M [MPa]','num']];
-  const STEP={t:0.1,gm:0.1,gs:0.1,phi:0.5,c:1,cu:1,E:1,nu:0.05,qc:0.5,EM:0.5};
+  const cols=[['name','Megnevezés','text'],['t','t [m]','num'],['gm','γ','num'],['gs','γ_sat','num'],['phi','φ′ [°]','num'],['c','c′','num'],['cu','c_u','num'],['E','E [MPa]','num'],['nu','ν','num'],['qc','q_c [MPa]','num']];
+  const STEP={t:0.1,gm:0.1,gs:0.1,phi:0.5,c:1,cu:1,E:1,nu:0.05,qc:0.5};
   let rows='';
   SOIL.layers.forEach((L,i)=>{
     rows+=`<tr data-i="${i}">`;
@@ -628,7 +609,7 @@ function renderSoilProfile(){
   document.getElementById('sp-D').addEventListener('input',e=>{SOIL.D=parseFloat(String(e.target.value).replace(',','.'))||0;soilNotify();renderSoilDerived();});
   document.getElementById('sp-gw').addEventListener('input',e=>{SOIL.gw=parseFloat(String(e.target.value).replace(',','.'))||0;soilNotify();renderSoilDerived();});
   SOIL.gammaW=GW_DENS; /* mindig 10 kN/m³ */
-  document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20,nu:0.3,qc:5,EM:6});renderSoilProfile();soilNotify();renderSoilDerived();});
+  document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20,nu:0.3,qc:5});renderSoilProfile();soilNotify();renderSoilDerived();});
 }
 function renderSoilDerived(){
   const host=document.getElementById('soilDerivedHost'); if(!host)return;
@@ -995,16 +976,6 @@ mkCalc({id:'bear-punch',title:'Átszúródás — szemcsés réteg kötött fele
       formula:'q_u = (1+0,2·B′/L′)(π+2)c_u2 + γ₁·D₁²(1+2D_f/D₁)(1+B′/L′)K_ps·tanφ′₁/B′ + γ₁·D_f'};
   }});
 
-/* ---- B.7 Ménard-presszióméteres teherbírás ---- */
-mkCalc({id:'bear-menard',title:'Teherbírás Ménard-presszióméterből (B.7)',tag:'B.7',color:'var(--azure)',
-  inputs:[{k:'sv0',label:'σ_v0 teljes függ. fesz. a talpon [kPa]',val:28,step:1},{k:'kp',label:'k_p teherbírási tényező',small:'B.6 grafikon, Q1–Q8',val:1.2,step:0.05},{k:'plm',label:'p*_LM,e nettó határnyomás [kPa]',small:'mértani közép 1,5·B-ben',val:1500,step:50},{k:'Ap',label:"A′ hatékony terület [m²]",val:3.4,step:0.1}],
-  compute:g=>{const sv0=g('sv0'),kp=g('kp'),plm=g('plm'),Ap=g('Ap');
-    const RA=sv0+kp*plm;const R=RA*Ap;
-    return{boxes:[['R_N/A′',fmt(RA,0)+' kPa','var(--azure)'],['R_N',fmt(R,0)+' kN','var(--moss)']],
-      rows:[['Felszínteher-tag σ_v0',fmt(sv0,0)+' kPa','subtle'],['Határnyomás-tag k_p·p*_LM,e',fmt(kp*plm,0)+' kPa','subtle']],
-      formula:`R_N/A′ = σ_v0 + k_p·p*_LM,e = ${fmt(sv0,0)} + ${fmt(kp,2)}·${fmt(plm,0)} = ${fmt(RA,0)} kPa`};
-  }});
-
 /* ---- B.16/B.23 szikla (Hoek–Brown) ---- */
 mkCalc({id:'bear-rock',title:'Teherbírás sziklatömbön — Hoek–Brown (B.16)',tag:'B.16',color:'var(--steel)',
   inputs:[{k:'sci',label:'σ_ci ép kőzet egytengelyű nyom.szil. [MPa]',val:50,step:1},{k:'GSI',label:'GSI (geol. szil. index)',val:55,step:1},{k:'mi',label:'m_i (kőzettípus)',val:12,step:1},{k:'D',label:'D zavartsági tényező (0–1)',val:0,step:0.1},{k:'Cf1',label:'C_f1 alaki korr. tényező',small:'Táblázat B.6: sáv 1,0 · négyzet 1,25 · kör 1,2',val:1.25,step:0.05},{k:'Ap',label:"A′ hatékony terület [m²]",val:2.0,step:0.1}],
@@ -1090,22 +1061,6 @@ mkCalc({id:'set-elastic',title:'Rugalmas süllyedés (B.10)',tag:'B.10',color:'v
     return{boxes:[['s süllyedés',fmt(s*1000,1)+' mm','var(--rebar)'],['I_s befolyásoló tényező',fmt(Is,3),'var(--steel)']],
       rows:[['(1−ν²)',fmt(1-nu*nu,3),'subtle'],['E_m,rep',fmt(Em,1)+' MPa','subtle']],
       formula:`s = p·B·(1−ν²)·I_s/E_m = ${fmt(p,0)}·${fmt(B,2)}·${fmt(1-nu*nu,3)}·${fmt(Is,3)}/${fmt(Em*1000,0)} = ${fmt(s*1000,1)} mm`};
-  }});
-
-mkCalc({id:'set-menard',title:'Süllyedés Ménard-presszióméterből (B.12)',tag:'B.12',color:'var(--azure)',usesSoil:true,
-  draw:g=>svgSection({B:g('B'),zInf:2*g('B'),cap:'Ménard-süllyedés — alapsík és befolyásolt zóna.'}),
-  inputs:[{k:'q',label:'q talpnyomás [kPa]',val:180,step:5},{k:'sv0',label:'σ_v0 kezdeti függ. fesz. [kPa]',val:28,step:1},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},{k:'Ec',label:'E_c (gömbi modulus, B/2) [MPa]',val:9,step:0.5},{k:'Ed',label:'E_d (deviátoros, 8B) [MPa]',val:7,step:0.5},
-    {k:'LB',label:'L/B (alaktényezőkhöz)',type:'select',val:'2',options:[{v:'circ',t:'Kör'},{v:'sq',t:'Négyzet'},{v:'2',t:'2'},{v:'3',t:'3'},{v:'5',t:'5'},{v:'20',t:'20'}]},
-    {k:'alpha',label:'α reológiai tényező',small:'B.5 tábla (0,25–1,0)',val:0.5,step:0.05}],
-  compute:g=>{const q=g('q'),sv0=g('sv0'),B=g('B'),Ec=g('Ec')*1000,Ed=g('Ed')*1000,al=g('alpha');const B0=0.6;
-    const ld={circ:1,sq:1.12,'2':1.53,'3':1.78,'5':2.14,'20':2.65},lc={circ:1,sq:1.1,'2':1.2,'3':1.3,'5':1.4,'20':1.5};
-    const lamD=ld[g('LB')],lamC=lc[g('LB')];
-    const sd=(2*B0/(9*Ed))*Math.pow(lamD*B/B0,al);
-    const sc=al*lamC*B/(9*Ec);
-    const s=(q-sv0)*(sd+sc);
-    return{boxes:[['s teljes süllyedés',fmt(s*1000,1)+' mm','var(--rebar)']],
-      rows:[['λ_c · λ_d alaktényezők',fmt(lamC,2)+' · '+fmt(lamD,2),'subtle'],['Deviátoros tag s_d',fmt((q-sv0)*sd*1000,1)+' mm'],['Gömbi tag s_c',fmt((q-sv0)*sc*1000,1)+' mm'],['(q−σ_v0)',fmt(q-sv0,0)+' kPa','subtle']],
-      formula:'s = (q−σ_v0)·[2B₀/(9E_d)·(λ_d·B/B₀)^α + α·λ_c·B/(9E_c)]'};
   }});
 
 mkCalc({id:'set-cpt',title:'Süllyedés CPT-ből — Schmertmann (B.13/B.14)',tag:'B.13',color:'var(--azure)',usesSoil:true,
