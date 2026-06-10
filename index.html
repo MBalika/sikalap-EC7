@@ -122,10 +122,10 @@ section.subsection h2{margin-top:0}
 .verdict.fail{background:#EFC9B5;color:#6B2F12;border:2px solid var(--rebar)}
 .calc-note{font-size:0.8rem;color:var(--ink-mute);margin:10px 0 0;line-height:1.6}
 .calc-formula{background:#F1EEE7;border-left:3px solid var(--azure);font-family:'JetBrains Mono';font-size:0.84rem;line-height:1.7;padding:10px 14px;border-radius:0 6px 6px 0;margin-top:12px;overflow-x:auto}
-.cr{display:grid;grid-template-columns:1fr 120px;gap:10px;align-items:center;margin:6px 0;font-size:0.88rem}
+.cr{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center;margin:6px 0;font-size:0.88rem}
 .cr label{color:var(--ink)}
 .cr label small{display:block;color:var(--ink-mute);font-size:0.74rem;line-height:1.2}
-.cr input,.cr select{background:var(--calc-input);border:1px solid var(--line-strong);border-radius:6px;padding:6px 8px;font-family:'JetBrains Mono';font-size:0.9rem;text-align:right;color:var(--steel-dk);width:100%}
+.cr input,.cr select{background:var(--calc-input);border:1px solid var(--line-strong);border-radius:6px;padding:6px 6px;font-family:'JetBrains Mono';font-size:0.9rem;text-align:right;color:var(--steel-dk);width:100%}
 .cr select{font-family:'Inter';text-align:left}
 .cr input:focus,.cr select:focus{outline:2px solid var(--steel);outline-offset:0}
 .cr.full{grid-template-columns:1fr}
@@ -594,12 +594,13 @@ function baseLayer(){return layerAt(SOIL.D+1e-3);}
 function renderSoilProfile(){
   const host=document.getElementById('soilProfileHost'); if(!host)return;
   const cols=[['name','Megnevezés','text'],['t','t [m]','num'],['gm','γ','num'],['gs','γ_sat','num'],['phi','φ′ [°]','num'],['c','c′','num'],['cu','c_u','num'],['E','E [MPa]','num'],['nu','ν','num'],['qc','q_c [MPa]','num'],['EM','E_M [MPa]','num']];
+  const STEP={t:0.1,gm:0.1,gs:0.1,phi:0.5,c:1,cu:1,E:1,nu:0.05,qc:0.5,EM:0.5};
   let rows='';
   SOIL.layers.forEach((L,i)=>{
     rows+=`<tr data-i="${i}">`;
     rows+=`<td style="text-align:center;font-weight:600;color:var(--steel-dk)">${i+1}</td>`;
     cols.forEach(([k,,t])=>{
-      rows+=`<td><input data-i="${i}" data-k="${k}"${t==='num'?' inputmode="decimal"':''} type="${t==='num'?'number':'text'}" value="${L[k]}" step="${k==='t'?'0.1':'0.01'}" style="width:100%;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
+      rows+=`<td><input data-i="${i}" data-k="${k}"${t==='num'?' inputmode="decimal"':''} type="${t==='num'?'number':'text'}" value="${L[k]}" step="${STEP[k]||'0.1'}" style="width:100%;min-width:${k==='name'?'108':'56'}px;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
     });
     rows+=`<td style="text-align:center"><button data-del="${i}" style="background:var(--rebar);color:#fff;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;font-weight:700" title="Réteg törlése">×</button></td>`;
     rows+='</tr>';
@@ -609,8 +610,8 @@ function renderSoilProfile(){
     <div class="calc-head"><h3>Rétegrend, talajvíz, alapozási mélység</h3></div>
     <div class="calc-body">
       <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px">
-        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" inputmode="decimal" value="${SOIL.D}" step="0.01"></div>
-        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Mértékadó talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" inputmode="decimal" value="${SOIL.gw}" step="0.01"></div>
+        <div class="cr" style="grid-template-columns:auto 120px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" inputmode="decimal" value="${SOIL.D}" step="0.1"></div>
+        <div class="cr" style="grid-template-columns:auto 120px;gap:8px"><label>Mértékadó talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" inputmode="decimal" value="${SOIL.gw}" step="0.1"></div>
       </div>
       <div style="overflow-x:auto">
       <table class="dt" style="font-size:0.82rem;margin:0">
@@ -739,7 +740,7 @@ function mkCalc(c){
     if(f.sep)return `<div class="cr-sep">${S(f.sep)}</div>`;
     const lab=`<label>${S(f.label)}${f.small?`<small>${S(f.small)}</small>`:''}</label>`;
     if(f.type==='select')return `<div class="cr"><div>${lab}</div><select id="${c.id}__${f.k}">${f.options.map(o=>`<option value="${o.v}">${S(o.t)}</option>`).join('')}</select></div>`;
-    return `<div class="cr"><div>${lab}</div><input id="${c.id}__${f.k}" type="number" inputmode="decimal" value="${f.val}" step="0.01"></div>`;
+    return `<div class="cr"><div>${lab}</div><input id="${c.id}__${f.k}" type="number" inputmode="decimal" value="${f.val}" step="${f.step||'0.1'}"></div>`;
   }).join('');
   host.innerHTML=`
   <div class="calc-head"><h3>${S(c.title)}</h3><span class="calc-tag" style="background:${c.color||'var(--rebar)'}">${c.tag||''}</span></div>
