@@ -363,17 +363,6 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
     <div class="callout note">A megközelítés (MFA / RFA) a kalkulátorban választható. A homlokfelületi (passzív) ellenállás csak akkor vehető figyelembe, ha a teljes élettartam alatt biztosan ébred (§5.5.3 (3)); kohézió a talpon zérusnak veendő (§5.5.4).</div>
   </section>
 
-  <section class="subsection" id="c-1">
-    <h2>Drénezetlen elcsúszás <span class="refbadge">5.13 (MFA) · 5.14 (RFA)</span></h2>
-    <div class="callout formula">
-      MFA: R<sub>Tud,base</sub> = A<sub>red</sub>·k·c<sub>u,rep</sub>/γ<sub>cu</sub> &nbsp;(5.13)<br>
-      RFA: R<sub>Tud,base</sub> = A<sub>red</sub>·k·c<sub>u,rep</sub>/γ<sub>RT</sub> &nbsp;(5.14)<br>
-      Korlát (rés/víz esetén): R<sub>Tud,base</sub> ≤ 0,4·N<sub>rep</sub> &nbsp;(5.15)
-    </div>
-    <p style="font-size:0.9rem;color:var(--ink-mute)">k (kinterface) = 1,0 érdes/bordázott talpnál, egyébként 2/3 (§5.5.3 (8)).</p>
-    <div class="calc" id="calc-slide-ud"></div>
-  </section>
-
   <section class="subsection" id="c-2">
     <h2>Drénezett elcsúszás <span class="refbadge">5.16 (MFA) · 5.17/5.18 (RFA)</span></h2>
     <div class="callout formula">
@@ -383,6 +372,17 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
       tanδ ≤ k·tanφ′ &nbsp;(5.8)
     </div>
     <div class="calc" id="calc-slide-dr"></div>
+  </section>
+
+  <section class="subsection" id="c-1">
+    <h2>Drénezetlen elcsúszás <span class="refbadge">5.13 (MFA) · 5.14 (RFA)</span></h2>
+    <div class="callout formula">
+      MFA: R<sub>Tud,base</sub> = A<sub>red</sub>·k·c<sub>u,rep</sub>/γ<sub>cu</sub> &nbsp;(5.13)<br>
+      RFA: R<sub>Tud,base</sub> = A<sub>red</sub>·k·c<sub>u,rep</sub>/γ<sub>RT</sub> &nbsp;(5.14)<br>
+      Korlát (rés/víz esetén): R<sub>Tud,base</sub> ≤ 0,4·N<sub>rep</sub> &nbsp;(5.15)
+    </div>
+    <p style="font-size:0.9rem;color:var(--ink-mute)">k (kinterface) = 1,0 érdes/bordázott talpnál, egyébként 2/3 (§5.5.3 (8)).</p>
+    <div class="calc" id="calc-slide-ud"></div>
   </section>
 
   <section class="subsection" id="c-3">
@@ -527,7 +527,7 @@ const CHAPTERS = [
   {id:'talaj', label:'Talajszelvény', subsections:[]},
   {id:'geometria', label:'Geometria', subsections:[{id:'g-1',label:'Hatékony km.'},{id:'g-2',label:'Kör alap'},{id:'g-3',label:'Tervezési méret'},{id:'g-4',label:'SLS külpont.'}]},
   {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-2',label:'Drénezett'},{id:'b-1',label:'Drénezetlen'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-6',label:'Ménard'},{id:'b-7',label:'Szikla'}]},
-  {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-1',label:'Drénezetlen'},{id:'c-2',label:'Drénezett'},{id:'c-3',label:'VC4'}]},
+  {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-2',label:'Drénezett'},{id:'c-1',label:'Drénezetlen'},{id:'c-3',label:'VC4'}]},
   {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-2',label:'Ménard'},{id:'s-3',label:'CPT'}]},
   {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'},{id:'i-4',label:'Feltárás'}]},
   {id:'merevseg', label:'Merevség & rugók', subsections:[{id:'m-1',label:'Relatív mer.'},{id:'m-2',label:'Ágyazási t.'},{id:'m-3',label:'Rugók'}]},
