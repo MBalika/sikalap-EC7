@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Síkalapok tervezése — Eurocode 7-3 (FprEN 1997-3:2024) interaktív kalkulátorok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --steel:#7C5A38; --steel-dk:#3A2A1A; --concrete:#A99B86; --concrete-lt:#D8D0C2;
+  --rebar:#C0512A; --rebar-dk:#8F3A1B; --azure:#2E7D8A; --moss:#5C7A52; --gold:#D7A33C;
+  --bg:#F6F3EE; --paper:#FFFFFF; --ink:#241C12; --ink-mute:#6B6052;
+  --line:#E2DBD0; --line-strong:#C4BAAB;
+  --shadow:0 1px 2px rgba(58,42,26,0.06), 0 8px 24px rgba(58,42,26,0.08);
+  --radius:14px; --radius-sm:8px;
+  --calc-bg:#F3EEE6; --calc-input:#FFFFFF; --calc-result:#EFE7DA;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;color:var(--ink);letter-spacing:-0.01em}
+h1{font-size:2.4rem;line-height:1.15;margin:0 0 .4em}
+h2{font-size:1.7rem;margin:1.6em 0 .6em;border-bottom:1px solid var(--line);padding-bottom:.3em}
+h3{font-size:1.2rem;margin:1.4em 0 .4em;color:var(--steel-dk)}
+h4{font-size:1rem;margin:1em 0 .3em;color:var(--steel)}
+p{margin:.7em 0}
+a{color:var(--steel);text-decoration:none;border-bottom:1px solid transparent}
+a:hover{border-bottom-color:var(--steel)}
+code,kbd,.mono{font-family:'JetBrains Mono',Menlo,monospace;font-size:0.92em}
+sub,sup{line-height:0}
+.brandbar{background:var(--steel-dk);color:#EFE7DA;border-bottom:1px solid var(--steel-dk)}
+.brandbar .wrap{max-width:1180px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brandbar .lhs{display:flex;align-items:center;gap:14px}
+.brand-mark{width:36px;height:36px;background:var(--rebar);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Fraunces';font-weight:700;font-size:1.05em;color:#fff;letter-spacing:-0.04em}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-text .uni{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;opacity:0.75}
+.brand-text .course{font-family:'Fraunces';font-weight:600;font-size:1.05rem;color:#fff}
+.brandbar .rhs{font-size:0.85rem;opacity:0.85;display:flex;gap:18px;align-items:center}
+.pill{background:rgba(255,255,255,.08);padding:5px 12px;border-radius:99px;font-size:0.78rem;letter-spacing:0.04em}
+.pill.rebar{background:var(--rebar);color:#fff;font-weight:500}
+.chaptertabs{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(0,0,0,0.02)}
+.chaptertabs .wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin}
+.chaptertabs button{background:transparent;border:none;padding:14px 16px;cursor:pointer;font-family:'Inter';font-size:0.92rem;color:var(--ink-mute);border-bottom:3px solid transparent;white-space:nowrap;transition:all 0.15s;font-weight:500;letter-spacing:0.01em}
+.chaptertabs button:hover{color:var(--steel-dk)}
+.chaptertabs button.active{color:var(--steel-dk);border-bottom-color:var(--rebar);font-weight:600}
+.chaptertabs .ch-num{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--concrete-lt);font-size:0.72rem;line-height:22px;text-align:center;margin-right:8px;color:var(--ink-mute);font-weight:600;font-variant-numeric:tabular-nums}
+.chaptertabs button.active .ch-num{background:var(--rebar);color:#fff}
+.subnav{background:#EEE7DC;border-bottom:1px solid var(--line);position:sticky;top:51px;z-index:40}
+.subnav .wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.subnav a{padding:11px 14px;font-size:0.86rem;color:var(--ink-mute);border-bottom:2px solid transparent;white-space:nowrap;font-weight:500;cursor:pointer}
+.subnav a.active{color:var(--steel-dk);border-bottom-color:var(--steel)}
+.subnav a:hover{color:var(--steel-dk)}
+main{max-width:1180px;margin:0 auto;padding:36px 28px 80px}
+.hero{background:linear-gradient(135deg,var(--steel) 0%,var(--steel-dk) 70%,#241810 100%);color:#EFE7DA;border-radius:var(--radius);padding:42px 44px;margin-bottom:28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.hero::after{content:"";position:absolute;right:-80px;bottom:-80px;width:280px;height:280px;background:radial-gradient(circle,var(--rebar) 0%,transparent 70%);opacity:0.22;border-radius:50%}
+.hero h1{color:#fff;font-size:2.6rem;margin-bottom:.2em}
+.hero .subtitle{font-size:1.05rem;opacity:0.88;font-weight:300;max-width:680px}
+.hero .meta{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap;font-size:0.85rem;opacity:0.85}
+.hero .meta span{display:flex;align-items:center;gap:8px}
+.hero .meta b{color:var(--gold);font-weight:600}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;margin:18px 0;box-shadow:var(--shadow)}
+.panel h3:first-child,.panel h2:first-child{margin-top:0}
+.callout{background:linear-gradient(180deg,#F4EFE7,#EBE3D6);border-left:4px solid var(--steel);padding:16px 20px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:14px 0;font-size:0.95rem}
+.callout.warn{background:linear-gradient(180deg,#FBF1E6,#F6E4CF);border-left-color:var(--rebar)}
+.callout.warn b{color:var(--rebar-dk)}
+.callout.note{background:#F4F1EB;border-left-color:var(--concrete)}
+.callout.formula{background:#F1EEE7;border-left-color:var(--azure);font-family:'JetBrains Mono';font-size:0.9rem;line-height:1.8}
+.callout.success{background:linear-gradient(180deg,#E8F1E3,#D6E5CE);border-left-color:var(--moss)}
+.callout.success b{color:#3E5A1F}
+.tag{display:inline-block;padding:2px 8px;background:var(--concrete-lt);color:var(--steel-dk);border-radius:4px;font-size:0.78rem;font-weight:500;letter-spacing:0.02em;margin-right:6px}
+.tag.rebar{background:var(--rebar);color:#fff}
+.tag.steel{background:var(--steel);color:#fff}
+.tag.gold{background:var(--gold);color:#fff}
+.tag.moss{background:var(--moss);color:#fff}
+.tag.azure{background:var(--azure);color:#fff}
+.grid{display:grid;gap:20px}
+.grid.c2{grid-template-columns:1fr 1fr}
+.grid.c3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:880px){.grid.c2,.grid.c3{grid-template-columns:1fr}.hero{padding:32px 24px}.hero h1{font-size:1.9rem}main{padding:24px 18px 60px}h2{font-size:1.4rem}}
+ul.bullet{list-style:none;padding-left:0}
+ul.bullet li{padding:4px 0 4px 22px;position:relative}
+ul.bullet li::before{content:"";position:absolute;left:6px;top:13px;width:6px;height:6px;background:var(--steel);border-radius:50%}
+ul.check{list-style:none;padding-left:0}
+ul.check li{padding:6px 0 6px 30px;position:relative}
+ul.check li::before{content:"\2713";position:absolute;left:0;top:6px;width:20px;height:20px;background:var(--moss);color:#fff;border-radius:50%;font-size:0.78rem;text-align:center;line-height:20px;font-weight:700}
+table.dt{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.92rem}
+table.dt th{background:var(--steel);color:#fff;padding:9px 11px;text-align:left;font-weight:600}
+table.dt td{padding:7px 11px;border-bottom:1px solid var(--line)}
+table.dt tr:nth-child(even) td{background:#F8F5F0}
+table.dt.num td{font-family:'JetBrains Mono';font-size:0.86rem;text-align:right}
+table.dt.num td:first-child{text-align:left;font-family:'Inter'}
+table.dt.num th{text-align:right;font-variant-numeric:tabular-nums}
+table.dt.num th:first-child{text-align:left}
+table.dt.mc th,table.dt.mc td{text-align:center}
+table.dt.mc th:first-child,table.dt.mc td:first-child{text-align:left}
+.foot{margin-top:60px;padding:24px 28px;background:var(--steel-dk);color:#CDC2B2;font-size:0.84rem;text-align:center}
+.foot a{color:var(--gold)}
+.chapter-page{display:none}
+.chapter-page.active{display:block}
+section.subsection{scroll-margin-top:120px;padding-top:8px}
+section.subsection h2{margin-top:0}
+.inline-math{font-family:'JetBrains Mono';background:#F1EEE7;padding:1px 6px;border-radius:4px;font-size:0.92em;color:var(--steel-dk)}
+.refbadge{display:inline-block;background:var(--azure);color:#fff;font-family:'JetBrains Mono';font-size:0.72rem;padding:2px 8px;border-radius:5px;margin-left:8px;font-weight:500;letter-spacing:0.02em;vertical-align:middle}
+/* ----- KALKULÁTOR ----- */
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:0;margin:24px 0;box-shadow:var(--shadow);overflow:hidden}
+.calc-head{background:linear-gradient(135deg,var(--steel),var(--steel-dk));color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.calc-head h3{margin:0;color:#fff;font-size:1.12rem}
+.calc-tag{background:var(--rebar);color:#fff;padding:4px 12px;border-radius:6px;font-size:0.78rem;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+.calc-body{padding:22px 24px;background:var(--calc-bg)}
+.calc-results{background:var(--calc-result);border-radius:var(--radius-sm);padding:16px 20px}
+.calc-results h4{margin:0 0 10px;color:var(--steel-dk);font-family:'Inter';font-size:0.92rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;border-bottom:1px solid var(--line-strong);padding-bottom:8px}
+.res-row{display:grid;grid-template-columns:1fr auto;gap:16px;padding:5px 0;font-size:0.92rem;align-items:baseline;border-bottom:1px dotted var(--line-strong)}
+.res-row:last-child{border-bottom:none}
+.res-row.subtle{color:var(--ink-mute);font-size:0.85rem}
+.res-row.hi .val{color:var(--rebar-dk);font-size:1.12rem}
+.res-row .val{font-family:'JetBrains Mono';font-weight:600;color:var(--steel-dk);font-size:1rem;text-align:right}
+.verdict{margin-top:14px;padding:14px 18px;border-radius:var(--radius-sm);font-weight:600;text-align:center}
+.verdict .big{font-size:1.3rem;font-family:'Fraunces';margin-bottom:4px;display:block}
+.verdict.ok{background:#D6E5CE;color:#2E4A1F;border:2px solid var(--moss)}
+.verdict.fail{background:#EFC9B5;color:#6B2F12;border:2px solid var(--rebar)}
+.calc-note{font-size:0.8rem;color:var(--ink-mute);margin:10px 0 0;line-height:1.6}
+.calc-formula{background:#F1EEE7;border-left:3px solid var(--azure);font-family:'JetBrains Mono';font-size:0.84rem;line-height:1.7;padding:10px 14px;border-radius:0 6px 6px 0;margin-top:12px;overflow-x:auto}
+.cr{display:grid;grid-template-columns:1fr 120px;gap:10px;align-items:center;margin:6px 0;font-size:0.88rem}
+.cr label{color:var(--ink)}
+.cr label small{display:block;color:var(--ink-mute);font-size:0.74rem;line-height:1.2}
+.cr input,.cr select{background:var(--calc-input);border:1px solid var(--line-strong);border-radius:6px;padding:6px 8px;font-family:'JetBrains Mono';font-size:0.9rem;text-align:right;color:var(--steel-dk);width:100%}
+.cr select{font-family:'Inter';text-align:left}
+.cr input:focus,.cr select:focus{outline:2px solid var(--steel);outline-offset:0}
+.cr.full{grid-template-columns:1fr}
+.cr-sep{margin:12px 0 4px;font-weight:600;color:var(--steel-dk);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid var(--line-strong);padding-bottom:4px}
+figure{margin:14px auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px;box-shadow:var(--shadow);max-width:680px}
+figure svg{width:100%;height:auto;display:block}
+figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+
+<header class="brandbar">
+  <div class="wrap">
+    <div class="lhs">
+      <div class="brand-mark">EC7</div>
+      <div class="brand-text">
+        <span class="uni">Eurocode 7 · 3. rész — Geotechnikai szerkezetek</span>
+        <span class="course">Síkalapok tervezése · FprEN 1997-3:2024, 5. fejezet és B. melléklet</span>
+      </div>
+    </div>
+    <div class="rhs">
+      <span class="pill rebar">interaktív kalkulátorok</span>
+    </div>
+  </div>
+</header>
+
+<nav class="chaptertabs"><div class="wrap" id="chTabs"></div></nav>
+<nav class="subnav" id="subNav"><div class="wrap" id="subNavInner"></div></nav>
+
+<main>
+<!-- ===================== BEVEZETÉS ===================== -->
+<div class="chapter-page active" id="page-bevezetes" data-ch="bevezetes">
+  <div class="hero">
+    <h1>Síkalapok tervezése — Eurocode 7-3</h1>
+    <p class="subtitle">A <b>FprEN&nbsp;1997-3:2024</b> szabvány <b>5.&nbsp;fejezetének</b> (Spread foundations) és <b>B.&nbsp;mellékletének</b> teljes számítási apparátusa interaktív kalkulátorokkal: teherbírás, elcsúszás, süllyedés, igazolások és alapmerevség — drénezett és drénezetlen esetre, tetszőleges rétegszámú talajszelvénnyel.</p>
+    <div class="meta">
+      <span><b>Forrás</b> FprEN 1997-3:2024 · §5 + Annex B</span>
+      <span><b>Megközelítés</b> Material Factor (MFA) &amp; Resistance Factor (RFA)</span>
+    </div>
+  </div>
+
+  <section class="subsection" id="bev-1">
+    <h2>Hogyan használd</h2>
+    <div class="panel">
+      <p>A felső sávban a <b>fő fejezetek</b> között válthatsz, alattuk az adott fejezet szakaszai jelennek meg. A számítás logikája:</p>
+      <ol style="padding-left:22px;line-height:1.95">
+        <li><b>Talajszelvény</b> — itt veszed fel a rétegeket (tetszőleges számban), a talajvízszintet és az alapozási mélységet. Ez a <b>közös adatforrás</b>: minden kalkulátor innen veszi a geosztatikus nyomást (q′, q0), a térfogatsúlyt (γ*) és az alapsík alatti réteg szilárdsági paramétereit.</li>
+        <li><b>Geometria</b> — a dolgozó (hatékony) keresztmetszet külpontosság mellett, tervezési méretek, SLS-külpontossági korlátok.</li>
+        <li><b>Teherbírás · Csúszás · Süllyedés</b> — a határállapot-számítások, mindegyik a szabványi képlettel és minden résztényezővel.</li>
+        <li><b>Igazolások</b> — a megfelelőség (Nd ≤ RNd, Td ≤ RTd) MFA és RFA szerint, a parciális tényezőkkel (Táblázat 5.2).</li>
+        <li><b>Merevség &amp; rugók</b> — relatív merevség, ágyazási tényező, lineáris rugómerevségek.</li>
+      </ol>
+    </div>
+    <div class="callout note"><b>Egységek:</b> hossz [m], erő [kN] (sávalapnál kN/m folyóméterre), feszültség/nyomás [kPa], térfogatsúly [kN/m³], szög [°]. A szögeket a program belül radiánra váltja, ahol a szabvány úgy kéri.</div>
+    <div class="callout warn"><b>NDP-értékek:</b> a szabvány több helyen Nemzeti Mellékletre (NDP) hivatkozik (parciális tényezők, ΔB, minimális feltárási mélység stb.). A kalkulátorok az alapértelmezett táblázati értékeket használják, de ezek a beviteli mezőkben átírhatók.</div>
+  </section>
+
+  <section class="subsection" id="bev-2">
+    <h2>A tervezés alapja <span class="refbadge">§5.2</span></h2>
+    <div class="panel">
+      <h3 style="margin-top:0">Igazolandó határállapotok</h3>
+      <div class="grid c2">
+        <div>
+          <h4>Teherbírási (ULS) <span class="refbadge">§5.2.5.1</span></h4>
+          <ul class="bullet" style="font-size:0.92rem">
+            <li>talajtörés (bearing failure)</li>
+            <li>elcsúszás (sliding)</li>
+            <li>elfordulás / felborulás (rotational, toppling)</li>
+            <li>a talaj-alap erősítőelemek nyírási/húzási törése</li>
+            <li>túlzott deformáció összeroppanó talaj / üregek miatt</li>
+            <li>túlzott megemelkedés (duzzadás, fagy)</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Használhatósági (SLS) <span class="refbadge">§5.2.5.2</span></h4>
+          <ul class="bullet" style="font-size:0.92rem">
+            <li>süllyedés (settlement)</li>
+            <li>megemelkedés (heave)</li>
+            <li>elfordulás, megdőlés (tilting)</li>
+            <li>vízszintes elmozdulás</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== TALAJSZELVÉNY ===================== -->
+<div class="chapter-page" id="page-talaj" data-ch="talaj">
+  <section class="subsection" id="t-1">
+    <h2>Talajszelvény — közös adatforrás</h2>
+    <p>Itt veszed fel a <b>rétegeket tetszőleges számban</b>, a <b>talajvízszintet</b> és az <b>alapozási mélységet (D)</b>. Minden további kalkulátor ebből a szelvényből számítja automatikusan a geosztatikus feszültségeket és az alapsík alatti réteg jellemzőit. A „+ Réteg" gombbal bővíthető, az egyes sorok törölhetők.</p>
+    <div class="callout note">A program a réteghatárokat felülről lefelé, a megadott vastagságokból összegzi. A szilárdsági paramétereket (φ′, c′, c<sub>u</sub>) és a merevségeket (E, ν, q<sub>c</sub>, E<sub>M</sub>) rétegenként add meg — a teherbírás, csúszás és süllyedés a megfelelő réteg(ek)ből dolgozik.</div>
+    <div id="soilProfileHost"></div>
+    <div id="soilDerivedHost"></div>
+  </section>
+</div>
+
+<!-- ===================== GEOMETRIA ===================== -->
+<div class="chapter-page" id="page-geometria" data-ch="geometria">
+  <section class="subsection" id="g-1">
+    <h2>Dolgozó (hatékony) keresztmetszet <span class="refbadge">§5.5.2.1</span></h2>
+    <p>Külpontos teher esetén a teherbírás-számításhoz a <b>hatékony alapterületet</b> (A′) használjuk, egyenletes talpfeszültség-eloszlást feltételezve. Téglalap alapnál a méreteket az excentricitás kétszeresével csökkentjük.</p>
+    <div class="callout formula" style="text-align:center">
+      B′ = B − 2·e<sub>B</sub> &nbsp;&nbsp; L′ = L − 2·e<sub>L</sub> &nbsp;&nbsp; A′ = B′·L′ &nbsp;&nbsp;<span style="color:var(--ink-mute)">(5.2)</span>
+    </div>
+    <div class="calc" id="calc-geo-rect"></div>
+  </section>
+
+  <section class="subsection" id="g-2">
+    <h2>Kör alap hatékony területe <span class="refbadge">§5.5.2.1 (3)</span></h2>
+    <p>Kör keresztmetszetnél a hatékony területet egy egyenértékű téglalappá alakítjuk (B′<sub>eq</sub>·L′<sub>eq</sub>).</p>
+    <div class="callout formula">
+      A<sub>eff</sub> = (D²/2)·[ arccos(2e/D) − (2e/D)·√(1 − (2e/D)²) ] &nbsp;<span style="color:var(--ink-mute)">(5.3)</span><br>
+      B′<sub>eq</sub> = √[ A<sub>eff</sub>·(D−2e)/(D+2e) ] &nbsp;&nbsp; L′<sub>eq</sub> = √[ A<sub>eff</sub>·(D+2e)/(D−2e) ] &nbsp;<span style="color:var(--ink-mute)">(5.4)</span>
+    </div>
+    <div class="calc" id="calc-geo-circ"></div>
+  </section>
+
+  <section class="subsection" id="g-3">
+    <h2>Tervezési méretek méréstűréssel <span class="refbadge">§5.6.3</span></h2>
+    <p>Helyszíni betonozású alapnál a tervezési szélességet a méréstűréssel csökkentjük (alapérték ΔB = ΔD = 0,1&nbsp;m, NDP).</p>
+    <div class="callout formula">B<sub>d</sub> = B<sub>nom</sub> − ΔB &nbsp;(5.10) &nbsp;&nbsp;|&nbsp;&nbsp; D<sub>d</sub> = D<sub>nom</sub> − ΔD &nbsp;(5.11)</div>
+    <div class="calc" id="calc-geo-dim"></div>
+  </section>
+
+  <section class="subsection" id="g-4">
+    <h2>SLS külpontossági korlátok <span class="refbadge">Táblázat 5.3</span></h2>
+    <p>A talp alatti hézag (tension gap) korlátozására a használhatósági határállapotban a teher külpontossága nem lépheti túl a következő határokat:</p>
+    <table class="dt mc">
+      <thead><tr><th>Teher</th><th>Sávalap</th><th>Kör alap</th><th>Téglalap alap</th></tr></thead>
+      <tbody>
+        <tr><td>Csak állandó (hézagmentes)</td><td>e<sub>B</sub>/B ≤ 1/6</td><td>e/R ≤ 1/4</td><td>(e<sub>L</sub>/L)+(e<sub>B</sub>/B) ≤ 1/6</td></tr>
+        <tr><td>Állandó + esetleges</td><td>e<sub>B</sub>/B ≤ 1/3</td><td>e/R ≤ 0,59</td><td>(e<sub>L</sub>/L)²+(e<sub>B</sub>/B)² ≤ 1/9</td></tr>
+      </tbody>
+    </table>
+    <div class="calc" id="calc-geo-ecc"></div>
+  </section>
+</div>
+
+<!-- ===================== TEHERBÍRÁS ===================== -->
+<div class="chapter-page" id="page-teherbiras" data-ch="teherbiras">
+  <section class="subsection" id="b-1">
+    <h2>Drénezetlen teherbírás <span class="refbadge">§5.5.2.1 (5.1)</span></h2>
+    <p>Gyors terhelésnél / telített kötött talajnál teljes feszültségekkel, a drénezetlen nyírószilárdsággal (c<sub>u</sub>, φ=0) számolunk. A felhajtóerő kedvező hatása <b>nem</b> vehető figyelembe.</p>
+    <div class="callout formula" style="text-align:center">
+      R<sub>Nu</sub> = A′·[ N<sub>cu</sub>·c<sub>u</sub>·b<sub>cu</sub>·d<sub>cu</sub>·g<sub>cu</sub>·i<sub>cu</sub>·s<sub>cu</sub> + q<sub>0</sub> ] &nbsp;&nbsp;N<sub>cu</sub> = π+2 ≈ 5,14 &nbsp;<span style="color:var(--ink-mute)">(5.1 · B.1)</span>
+    </div>
+    <p style="font-size:0.9rem;color:var(--ink-mute)">A tényezők (B.2): b<sub>cu</sub>=1−2α/(π+2) · d<sub>cu</sub>=1+0,33·arctan(D<sub>f</sub>/B) · g<sub>cu</sub>=max(1−2β/(π+2);0) · i<sub>cu</sub>=½(1+√(1−H/(A′c<sub>u</sub>))) · s<sub>cu</sub>=1+0,2(B′/L′) [kör: 1,2]</p>
+    <div class="calc" id="calc-bear-ud"></div>
+  </section>
+
+  <section class="subsection" id="b-2">
+    <h2>Drénezett teherbírás <span class="refbadge">§5.5.2.1 (5.5)</span></h2>
+    <p>Lassú terhelésnél / szemcsés talajnál hatékony feszültségekkel, a φ′–c′ értékpárral. A teherbírás három tagból áll (kohéziós, mélységi, szélességi):</p>
+    <div class="callout formula" style="text-align:center">
+      R<sub>N</sub> = A′·[ c′·N<sub>c</sub>·b<sub>c</sub>·d<sub>c</sub>·g<sub>c</sub>·i<sub>c</sub>·s<sub>c</sub> + q′·N<sub>q</sub>·b<sub>q</sub>·d<sub>q</sub>·g<sub>q</sub>·i<sub>q</sub>·s<sub>q</sub> + 0,5·γ*·B′·N<sub>γ</sub>·b<sub>γ</sub>·d<sub>γ</sub>·g<sub>γ</sub>·i<sub>γ</sub>·s<sub>γ</sub> ] &nbsp;<span style="color:var(--ink-mute)">(5.5)</span>
+    </div>
+    <div class="callout formula">
+      N<sub>q</sub> = e<sup>π·tanφ</sup>·tan²(45°+φ/2) &nbsp;·&nbsp; N<sub>c</sub> = (N<sub>q</sub>−1)·cotφ &nbsp;·&nbsp; N<sub>γ</sub> = 2·(N<sub>q</sub>−1)·tanφ &nbsp;<span style="color:var(--ink-mute)">(B.3, érdes talp)</span>
+    </div>
+    <div class="calc" id="calc-bear-dr"></div>
+    <div class="callout note" id="bear-factors-note"></div>
+  </section>
+
+  <section class="subsection" id="b-3">
+    <h2>Talajvíz hatása a q′ és γ* értékre <span class="refbadge">B.4 (7)</span></h2>
+    <p>A geosztatikus nyomás és a talp alatti térfogatsúly a talajvízszinttől függ. A szabvány négy esetet különböztet meg (átszivárgás nélkül):</p>
+    <table class="dt">
+      <thead><tr><th>Talajvízszint helyzete</th><th>q′ (alapsíkon)</th><th>γ* (talp alatt)</th></tr></thead>
+      <tbody>
+        <tr><td>terepszinten</td><td>(γ<sub>sat</sub>−γ<sub>w</sub>)·D<sub>f</sub></td><td>γ<sub>sat</sub>−γ<sub>w</sub></td></tr>
+        <tr><td>D<sub>w</sub> mélységben, talp felett</td><td>γ·D<sub>w</sub> + (γ<sub>sat</sub>−γ<sub>w</sub>)(D<sub>f</sub>−D<sub>w</sub>)</td><td>γ<sub>sat</sub>−γ<sub>w</sub></td></tr>
+        <tr><td>alapsík szintjén</td><td>γ·D<sub>f</sub></td><td>γ<sub>sat</sub>−γ<sub>w</sub></td></tr>
+        <tr><td>&gt; 1,5·B-vel a talp alatt</td><td>γ·D<sub>f</sub></td><td>γ (nedves)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem;color:var(--ink-mute)">A program a <b>Talajszelvény</b> alapján rétegenként, a tényleges talajvízszinttel integrálja q′-t és q0-t; γ*-ot a talp és a 1,5·B′ közötti tartományban lineárisan interpolálja. Az alábbi kalkulátor egy egyrétegű ellenőrző eszköz a négy alapesetre.</p>
+    <div class="calc" id="calc-bear-gw"></div>
+  </section>
+
+  <section class="subsection" id="b-4">
+    <h2>Réteghatáron — erősebb réteg gyengébb felett <span class="refbadge">B.5</span></h2>
+    <p>Ha az alap erősebb réteg felett gyengébb réteg van, három tönkremeneteli mechanizmust kell vizsgálni: (a) törés a felső rétegben, (b) átszúródás a felsőn + törés az alsóban, (c) kinyomódás az alsó rétegben.</p>
+    <h3>Drénezetlen — erősebb kötött réteg gyengébb kötött felett <span class="refbadge">B.5 (1)</span></h3>
+    <p>B′&gt;2·D<sub>1</sub> esetén az R<sub>Nu</sub> az (5.1) szerint, c<sub>u</sub> helyébe k<sub>1</sub>·c<sub>u1</sub> téve:</p>
+    <div class="callout formula">k<sub>1</sub> = min{ (c<sub>u2</sub>/c<sub>u1</sub>)·(1 + B′/L′)·(1 + B′/(2·D<sub>1</sub>)) ; 1,0 }</div>
+    <div class="calc" id="calc-bear-lay2"></div>
+    <h3>Konzervatív alternatíva — hatékony terület levetítése <span class="refbadge">B.5 (3)</span></h3>
+    <p>A hatékony területet a gyengébb réteg tetejére vetítjük (max. 1:2 ≈ a szabvány szerinti szétterülési szög), és ott az (5.1)/(5.5) szerint a gyengébb réteggel ellenőrzünk.</p>
+    <div class="calc" id="calc-bear-proj"></div>
+  </section>
+
+  <section class="subsection" id="b-5">
+    <h2>Átszúródás — szemcsés réteg kötött felett <span class="refbadge">B.5 (2), Táblázat B.1</span></h2>
+    <p>Erősebb szemcsés réteg gyengébb kötött réteg felett, átszúródási nyírással:</p>
+    <div class="callout formula" style="font-size:0.82rem">
+      R<sub>Nu</sub> = A′·[ (1+0,2·B′/L′)·(π+2)·c<sub>u2</sub> &nbsp;+&nbsp; γ<sub>1</sub>·D<sub>1</sub>²·(1+2D<sub>f</sub>/D<sub>1</sub>)·(1+B′/L′)·K<sub>ps</sub>·tanφ′<sub>1</sub>/B′ &nbsp;+&nbsp; γ<sub>1</sub>·D<sub>f</sub> ] &nbsp;<span style="color:var(--ink-mute)">(B.6)</span>
+    </div>
+    <table class="dt num">
+      <thead><tr><th>ξ = q<sub>2</sub>/q<sub>1</sub></th><th>K<sub>ps</sub> (φ′<sub>1</sub>=30°)</th><th>35°</th><th>40°</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0,8</td><td>1,2</td><td>2,1</td></tr>
+        <tr><td>0,2</td><td>1,8</td><td>2,7</td><td>4,3</td></tr>
+        <tr><td>0,4</td><td>2,8</td><td>4,4</td><td>6,9</td></tr>
+        <tr><td>1,0</td><td>5,4</td><td>7,9</td><td>12,4</td></tr>
+      </tbody>
+    </table>
+    <div class="calc" id="calc-bear-punch"></div>
+  </section>
+
+  <section class="subsection" id="b-6">
+    <h2>Teherbírás Ménard-presszióméterből <span class="refbadge">B.6 (B.7)</span></h2>
+    <p>A presszióméteres mérésekből a teherbírás a nettó határnyomásból (p*<sub>LM,e</sub>) és a k<sub>p</sub> teherbírási tényezőből számítható.</p>
+    <div class="callout formula">
+      R<sub>N</sub>/A′ = σ<sub>v0</sub> + k<sub>p</sub>·p*<sub>LM,e</sub> &nbsp;(B.7) &nbsp;&nbsp;|&nbsp;&nbsp; p*<sub>LM,e</sub> = a nettó határnyomás mértani közepe 1,5·B mélységben (B.8)
+    </div>
+    <div class="calc" id="calc-bear-menard"></div>
+  </section>
+
+  <section class="subsection" id="b-7">
+    <h2>Teherbírás sziklatömbön — ékegyensúly (Hoek–Brown) <span class="refbadge">B.16 (B.23)</span></h2>
+    <p>Folytonos közegként viselkedő sziklatömbön a teherbírás a Hoek–Brown burkológörbével:</p>
+    <div class="callout formula">R<sub>N</sub> = C<sub>f1</sub>·A′·σ<sub>ci</sub>·[ √(m<sub>b</sub>·s + s) ... ·(√(s)+s)·... ] &nbsp;<span style="color:var(--ink-mute)">(B.23)</span></div>
+    <div class="callout warn" style="font-size:0.85rem"><b>Megjegyzés:</b> a (B.23) képlet OCR-je részben sérült a forrásban; a kalkulátor a Hoek–Brown alapformát valósítja meg — éles használat előtt vesd össze a hivatalos szabvánnyal.</div>
+    <div class="calc" id="calc-bear-rock"></div>
+  </section>
+</div>
+<!-- ===================== CSÚSZÁS ===================== -->
+<div class="chapter-page" id="page-csuszas" data-ch="csuszas">
+  <section class="subsection" id="c-0">
+    <h2>Elcsúszás-ellenállás <span class="refbadge">§5.5.3 · §5.6.4</span></h2>
+    <p>Ferde teher esetén az alapot elcsúszásra kell vizsgálni. Az ellenállás a talp-ellenállásból és az alap homlokfelületén ébredő passzív földnyomásból tevődik össze:</p>
+    <div class="callout formula" style="text-align:center">T<sub>d</sub> ≤ R<sub>Td,base</sub> + R<sub>Td,face</sub> &nbsp;<span style="color:var(--ink-mute)">(5.12)</span></div>
+    <div class="callout note">A megközelítés (MFA / RFA) a kalkulátorban választható. A homlokfelületi (passzív) ellenállás csak akkor vehető figyelembe, ha a teljes élettartam alatt biztosan ébred (§5.5.3 (3)); kohézió a talpon zérusnak veendő (§5.5.4).</div>
+  </section>
+
+  <section class="subsection" id="c-1">
+    <h2>Drénezetlen elcsúszás <span class="refbadge">5.13 (MFA) · 5.14 (RFA)</span></h2>
+    <div class="callout formula">
+      MFA: R<sub>Tud,base</sub> = A<sub>red</sub>·k·c<sub>u,rep</sub>/γ<sub>cu</sub> &nbsp;(5.13)<br>
+      RFA: R<sub>Tud,base</sub> = A<sub>red</sub>·k·c<sub>u,rep</sub>/γ<sub>RT</sub> &nbsp;(5.14)<br>
+      Korlát (rés/víz esetén): R<sub>Tud,base</sub> ≤ 0,4·N<sub>rep</sub> &nbsp;(5.15)
+    </div>
+    <p style="font-size:0.9rem;color:var(--ink-mute)">k (kinterface) = 1,0 érdes/bordázott talpnál, egyébként 2/3 (§5.5.3 (8)).</p>
+    <div class="calc" id="calc-slide-ud"></div>
+  </section>
+
+  <section class="subsection" id="c-2">
+    <h2>Drénezett elcsúszás <span class="refbadge">5.16 (MFA) · 5.17/5.18 (RFA)</span></h2>
+    <div class="callout formula">
+      MFA: R<sub>Td,base</sub> = (N<sub>d</sub>−U<sub>d</sub>)·tanδ<sub>rep</sub>/γ<sub>tanφ</sub> &nbsp;(5.16)<br>
+      RFA (VC1): R<sub>Td,base</sub> = (N<sub>d</sub>−U<sub>d</sub>)·tanδ<sub>rep</sub>/γ<sub>RT</sub> &nbsp;(5.17)<br>
+      RFA (VC4): R<sub>Td,base</sub> = (N<sub>rep</sub>−U<sub>rep</sub>)·tanδ<sub>rep</sub>/γ<sub>RT</sub> &nbsp;(5.18)<br>
+      tanδ ≤ k·tanφ′ &nbsp;(5.8)
+    </div>
+    <div class="calc" id="calc-slide-dr"></div>
+  </section>
+
+  <section class="subsection" id="c-3">
+    <h2>VC4 alkalmazhatósági feltétel <span class="refbadge">5.19</span></h2>
+    <p>RFA-nál ferde terhelésnél a 4. ellenőrzési eset (VC4) az 1. helyett akkor alkalmazható, ha:</p>
+    <div class="callout formula" style="text-align:center">T<sub>rep</sub> ≤ 0,2·N<sub>rep</sub> &nbsp;(5.19)</div>
+    <div class="calc" id="calc-slide-vc4"></div>
+  </section>
+</div>
+
+<!-- ===================== SÜLLYEDÉS ===================== -->
+<div class="chapter-page" id="page-sullyedes" data-ch="sullyedes">
+  <section class="subsection" id="s-1">
+    <h2>Rugalmas süllyedés (befolyásoló tényezővel) <span class="refbadge">B.7 (B.10)</span></h2>
+    <p>Homogén talajon a teljes süllyedés a rugalmasság-elméletből, az I<sub>s</sub> befolyásoló tényezővel:</p>
+    <div class="callout formula" style="text-align:center">s = p<sub>rep</sub>·B·(1−ν²)·I<sub>s</sub> / E<sub>m,rep</sub> &nbsp;<span style="color:var(--ink-mute)">(B.10)</span></div>
+    <table class="dt num">
+      <thead><tr><th>I<sub>s</sub> (átlag)</th><th>Kör</th><th>L/B=1</th><th>2</th><th>3</th><th>5</th><th>10</th></tr></thead>
+      <tbody>
+        <tr><td>Hajlékony (átlag)</td><td>0,85</td><td>0,95</td><td>1,30</td><td>1,53</td><td>1,83</td><td>2,25</td></tr>
+        <tr><td>Merev</td><td>0,79</td><td>0,83</td><td>1,21</td><td>1,43</td><td>1,72</td><td>2,13</td></tr>
+      </tbody>
+    </table>
+    <div class="calc" id="calc-set-elastic"></div>
+  </section>
+
+  <section class="subsection" id="s-2">
+    <h2>Süllyedés Ménard-presszióméterből <span class="refbadge">B.12 (B.12)</span></h2>
+    <p>Merev alapra a presszióméteres (Ménard) süllyedés a deviátoros és gömbi tagból:</p>
+    <div class="callout formula" style="text-align:center">
+      s = (q−σ<sub>v0</sub>)·[ (2·B<sub>0</sub>/(9·E<sub>d</sub>))·(λ<sub>d</sub>·B/B<sub>0</sub>)<sup>α</sup> + α·λ<sub>c</sub>·B/(9·E<sub>c</sub>) ] &nbsp;<span style="color:var(--ink-mute)">(B.12)</span>
+    </div>
+    <p style="font-size:0.88rem;color:var(--ink-mute)">B<sub>0</sub>=0,6&nbsp;m referenciaszélesség; α reológiai tényező (B.5 tábla); λ<sub>c</sub>, λ<sub>d</sub> alaktényezők (B.4 tábla).</p>
+    <div class="calc" id="calc-set-menard"></div>
+  </section>
+
+  <section class="subsection" id="s-3">
+    <h2>Süllyedés CPT-ből — Schmertmann <span class="refbadge">B.13 (B.13, B.14)</span></h2>
+    <p>Szemcsés talajon a CPT-eredményekből, rétegenkénti integrálással:</p>
+    <div class="callout formula">
+      s = C<sub>1</sub>·C<sub>2</sub>·C<sub>3</sub>·(q−σ<sub>v0</sub>)·Σ(I<sub>z</sub>/E′)·Δz &nbsp;(B.13)<br>
+      I<sub>z,max</sub> = 0,5 + 0,1·√[ (q−σ′<sub>vp</sub>)/σ′<sub>v0</sub> ] &nbsp;(B.14)
+    </div>
+    <p style="font-size:0.88rem;color:var(--ink-mute)">C<sub>1</sub>=1−0,5·σ′<sub>v0</sub>/(q−σ′<sub>v0</sub>) (mélység) · C<sub>2</sub>=1+0,2·log<sub>10</sub>(10t) (kúszás) · C<sub>3</sub>=1,25 négyzetes / 1,75 sáv (alak). Befolyásmélység: 2B (négyzet/kör), 4B (sáv); csúcs I<sub>z</sub> B/2-nél (négyzet) ill. B-nél (sáv).</p>
+    <div class="calc" id="calc-set-cpt"></div>
+  </section>
+</div>
+
+<!-- ===================== IGAZOLÁSOK ===================== -->
+<div class="chapter-page" id="page-igazolas" data-ch="igazolas">
+  <section class="subsection" id="i-1">
+    <h2>Parciális tényezők <span class="refbadge">Táblázat 5.2 (NDP)</span></h2>
+    <p>A síkalapok ULS-igazolása vagy a <b>Material Factor Approach</b> (MFA — a talaj szilárdságát csökkentjük), vagy a <b>Resistance Factor Approach</b> (RFA — az ellenállást csökkentjük) szerint történik.</p>
+    <table class="dt mc">
+      <thead><tr><th>Tényező</th><th>Jel</th><th>MFA</th><th>RFA</th></tr></thead>
+      <tbody>
+        <tr><td>Belső súrlódás (tanφ′)</td><td>γ<sub>φ</sub></td><td>1,25 (M2)</td><td>1,0</td></tr>
+        <tr><td>Hatékony kohézió (c′)</td><td>γ<sub>c</sub></td><td>1,25 (M2)</td><td>1,0</td></tr>
+        <tr><td>Drénezetlen ny.szil. (c<sub>u</sub>)</td><td>γ<sub>cu</sub></td><td>1,4 (M2)</td><td>1,0</td></tr>
+        <tr><td>Teherbírási ellenállás</td><td>γ<sub>RN</sub></td><td>1,0</td><td>1,4</td></tr>
+        <tr><td>Csúszási ellenállás</td><td>γ<sub>RT</sub></td><td>1,0</td><td>1,1</td></tr>
+        <tr><td>Passzív (homlok-) ellenállás</td><td>γ<sub>RT,face</sub></td><td>1,0</td><td>1,4</td></tr>
+      </tbody>
+    </table>
+    <div class="callout note">A hatások parciális tényezői (VC1: γ<sub>G</sub>=1,35, γ<sub>Q</sub>=1,5) az EN 1990:2023 A. mellékletből. Az értékek a Nemzeti Mellékletben (NDP) eltérhetnek — a kalkulátorokban átírhatók.</div>
+  </section>
+
+  <section class="subsection" id="i-2">
+    <h2>Teherbírási igazolás <span class="refbadge">§5.6.3 (5.9)</span></h2>
+    <div class="callout formula" style="text-align:center">N<sub>d</sub> ≤ R<sub>Nd</sub> &nbsp;(5.9)</div>
+    <p>A teljes teherbírási igazolás a <b>Teherbírás</b> fejezet drénezett/drénezetlen kalkulátoraiban közvetlenül elvégezhető (MFA/RFA választással, a talajszelvényből). Itt egy összegző ellenőrző:</p>
+    <div class="calc" id="calc-ver-bear"></div>
+  </section>
+
+  <section class="subsection" id="i-3">
+    <h2>Csúszási igazolás <span class="refbadge">§5.6.4 (5.12)</span></h2>
+    <div class="callout formula" style="text-align:center">T<sub>d</sub> ≤ R<sub>Td,base</sub> + R<sub>Td,face</sub> &nbsp;(5.12)</div>
+    <div class="calc" id="calc-ver-slide"></div>
+  </section>
+
+  <section class="subsection" id="i-4">
+    <h2>Minimális feltárási mélység <span class="refbadge">Táblázat 5.1 (NDP)</span></h2>
+    <table class="dt">
+      <thead><tr><th>Alaptípus</th><th>Minimális mélység d<sub>min</sub></th></tr></thead>
+      <tbody>
+        <tr><td>Négyzetes / kör alap</td><td>max{3·B; 6 m}</td></tr>
+        <tr><td>Sávalap</td><td>max{5·B; 6 m}</td></tr>
+        <tr><td>Lemezalap / alapcsoport</td><td>max{1,5·B; 6 m}</td></tr>
+      </tbody>
+    </table>
+    <div class="calc" id="calc-ver-dmin"></div>
+  </section>
+</div>
+
+<!-- ===================== MEREVSÉG & RUGÓK ===================== -->
+<div class="chapter-page" id="page-merevseg" data-ch="merevseg">
+  <section class="subsection" id="m-1">
+    <h2>Alap relatív merevsége <span class="refbadge">B.14 (B.15)</span></h2>
+    <p>A téglalap alap relatív merevsége rugalmas alapra és talajra:</p>
+    <div class="callout formula" style="text-align:center">
+      K<sub>s</sub> = 5,57·(E<sub>f</sub>/E<sub>g</sub>)·[(1−ν<sub>g</sub>²)/(1−ν<sub>f</sub>²)]·(B/L)<sup>0,5</sup>·(t<sub>f</sub>/B)³ &nbsp;<span style="color:var(--ink-mute)">(B.15)</span>
+    </div>
+    <p style="font-size:0.9rem;color:var(--ink-mute)">Az alap <b>merev</b>, ha K<sub>s</sub>&gt;10; <b>hajlékony</b>, ha K<sub>s</sub>&lt;0,05; közte a tényleges merevség függvénye.</p>
+    <div class="calc" id="calc-stiff-ks"></div>
+  </section>
+
+  <section class="subsection" id="m-2">
+    <h2>Ágyazási tényező (subgrade reaction) <span class="refbadge">B.14 (B.16)</span></h2>
+    <p>Rugóláncon nyugvó gerendaként modellezve az ágyazási tényező (Vesić-féle alak):</p>
+    <div class="callout formula" style="text-align:center">
+      k<sub>subgrade</sub> = [0,65/(1−ν²)]·(E/B)·¹²√(E·B⁴/(E<sub>f</sub>·I<sub>f</sub>)) &nbsp;<span style="color:var(--ink-mute)">(B.16)</span>
+    </div>
+    <div class="calc" id="calc-stiff-sub"></div>
+  </section>
+
+  <section class="subsection" id="m-3">
+    <h2>Lineáris rugómerevségek <span class="refbadge">B.15 (B.17–B.22)</span></h2>
+    <p>Felszíni merev alap homogén féltéren — a hat szabadságfok rugómerevségei a G nyíró-rugalmassági modulusból:</p>
+    <div class="callout formula" style="font-size:0.82rem">
+      K<sub>yy</sub> = G·B/(2−ν)·[2 + 2,5·(L/B)<sup>0,85</sup>] &nbsp;(B.17)<br>
+      K<sub>xx</sub> = G·B/(2−ν)·[1,2 + 3,3·(L/B)<sup>0,65</sup>] &nbsp;(B.18)<br>
+      K<sub>zz</sub> = G·B/(1−ν)·[0,73 + 1,54·(L/B)<sup>0,75</sup>] &nbsp;(B.19)<br>
+      K<sub>rx</sub> = G·B³/(8(1−ν))·[0,4 + 3,2·(L/B)] &nbsp;(B.20)<br>
+      K<sub>ry</sub> = G·B³/(8(1−ν))·[3,6·(L/B)<sup>2,4</sup>] &nbsp;(B.21)<br>
+      K<sub>rz</sub> = G·B³/8·[4,1 + 4,2·(L/B)<sup>2,45</sup>] &nbsp;(B.22)
+    </div>
+    <div class="callout warn" style="font-size:0.85rem"><b>Megjegyzés:</b> a B.15 képletek dimenziószorzói (B = szélesség, L = hossz) a forrás OCR-jében részben sérültek; a kalkulátor a fenti, B=szélesség / L=hossz konvencióval számol — pontos tervezésnél vesd össze a hivatalos szabvánnyal.</div>
+    <div class="calc" id="calc-stiff-spring"></div>
+  </section>
+</div>
+</main>
+
+<div class="foot">
+  Készült a <b>FprEN 1997-3:2024 (Eurocode 7, 3. rész)</b> 5. fejezete és B. (informatív) melléklete alapján · oktatási/segédlet célra.<br>
+  A kalkulátorok a szabvány képleteit valósítják meg; éles tervezésnél mindig a hatályos, hivatalos szabványszöveggel és a Nemzeti Mellékletekkel (NDP-értékek) vesd össze.
+</div>
+
+<script>
+/* ===================== FEJEZET-NAVIGÁCIÓ ===================== */
+const CHAPTERS = [
+  {id:'bevezetes', label:'Bevezetés', subsections:[{id:'bev-1',label:'Használat'},{id:'bev-2',label:'Tervezés alapja'}]},
+  {id:'talaj', label:'Talajszelvény', subsections:[]},
+  {id:'geometria', label:'Geometria', subsections:[{id:'g-1',label:'Hatékony km.'},{id:'g-2',label:'Kör alap'},{id:'g-3',label:'Tervezési méret'},{id:'g-4',label:'SLS külpont.'}]},
+  {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-1',label:'Drénezetlen'},{id:'b-2',label:'Drénezett'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-6',label:'Ménard'},{id:'b-7',label:'Szikla'}]},
+  {id:'csuszas', label:'Csúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-1',label:'Drénezetlen'},{id:'c-2',label:'Drénezett'},{id:'c-3',label:'VC4'}]},
+  {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-2',label:'Ménard'},{id:'s-3',label:'CPT'}]},
+  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Csúszás'},{id:'i-4',label:'Feltárás'}]},
+  {id:'merevseg', label:'Merevség & rugók', subsections:[{id:'m-1',label:'Relatív mer.'},{id:'m-2',label:'Ágyazási t.'},{id:'m-3',label:'Rugók'}]},
+];
+function setChapter(chId){
+  document.querySelectorAll('.chapter-page').forEach(p=>p.classList.remove('active'));
+  const page=document.getElementById('page-'+chId); if(page)page.classList.add('active');
+  document.querySelectorAll('#chTabs button').forEach(b=>b.classList.toggle('active',b.dataset.ch===chId));
+  const ch=CHAPTERS.find(c=>c.id===chId), sub=document.getElementById('subNavInner'); sub.innerHTML='';
+  if(ch&&ch.subsections.length){
+    document.getElementById('subNav').style.display='';
+    ch.subsections.forEach(s=>{const a=document.createElement('a');a.textContent=s.label;a.addEventListener('click',()=>{const el=document.getElementById(s.id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});});sub.appendChild(a);});
+  } else document.getElementById('subNav').style.display='none';
+  window.scrollTo({top:0,behavior:'instant'});
+  history.replaceState(null,'','#'+chId);
+}
+(function(){const tabs=document.getElementById('chTabs');CHAPTERS.forEach((c,i)=>{const b=document.createElement('button');b.dataset.ch=c.id;b.innerHTML=(i>0?`<span class="ch-num">${i}</span>`:'')+c.label;b.addEventListener('click',()=>setChapter(c.id));tabs.appendChild(b);});})();
+
+/* ===================== SEGÉDFÜGGVÉNYEK ===================== */
+const fmt=(v,d=2)=>{if(v===null||v===undefined||!isFinite(v))return '—';if(Math.abs(v)<1e-9)v=0;return v.toFixed(d).replace('.',',');};
+const d2r=d=>d*Math.PI/180;
+function rr(l,v,cls){return `<div class="res-row${cls?' '+cls:''}"><span>${l}</span><span class="val">${v}</span></div>`;}
+function vbox(ok,line){return `<div class="verdict ${ok?'ok':'fail'}"><span class="big">${ok?'MEGFELEL ✓':'NEM FELEL MEG ✗'}</span>${line}</div>`;}
+
+/* drénezett teherbírási tényezők */
+function Nfac(phi){const r=d2r(phi);if(phi<=0.01)return{Nq:1,Nc:5.14,Ng:0};const Nq=Math.exp(Math.PI*Math.tan(r))*Math.pow(Math.tan(Math.PI/4+r/2),2);const Nc=(Nq-1)/Math.tan(r);const Ng=2*(Nq-1)*Math.tan(r);return{Nq,Nc,Ng};}
+
+/* ===================== TALAJSZELVÉNY-MODELL ===================== */
+const GW_DENS=9.81;
+const SOIL={
+  D:1.2, gw:3.5, gammaW:GW_DENS,
+  layers:[
+    {name:'Iszapos homok', t:2.4, gm:18, gs:20, phi:30, c:5, cu:120, E:25, nu:0.30, qc:8, EM:9},
+    {name:'Kavicsos homok', t:6.0, gm:19, gs:21, phi:34, c:0, cu:0, E:45, nu:0.28, qc:16, EM:18},
+  ],
+  _subs:[],
+};
+function soilSubscribe(fn){SOIL._subs.push(fn);}
+function soilNotify(){SOIL._subs.forEach(fn=>{try{fn();}catch(e){console.error(e);}});}
+/* kumulált réteghatárok (tetők) */
+function layerTops(){let z=0;return SOIL.layers.map(L=>{const top=z;z+=L.t;return{top,bot:z,L};});}
+function profileBottom(){return SOIL.layers.reduce((s,L)=>s+L.t,0);}
+function layerAt(z){const segs=layerTops();for(const s of segs){if(z<s.bot-1e-9)return s.L;}return SOIL.layers[SOIL.layers.length-1];}
+/* teljes függőleges feszültség z mélységben */
+function sigmaTot(z){let s=0;const segs=layerTops();for(const sg of segs){const a=sg.top,b=Math.min(sg.bot,z);if(b<=a)break;const gw=SOIL.gw;const dry=Math.max(0,Math.min(b,gw)-a),wet=Math.max(0,b-Math.max(a,gw));s+=dry*sg.L.gm+wet*sg.L.gs;}return s;}
+/* pórusvíznyomás */
+function uPore(z){return z>SOIL.gw?(z-SOIL.gw)*SOIL.gammaW:0;}
+/* hatékony függőleges feszültség */
+function sigmaEff(z){return sigmaTot(z)-uPore(z);}
+/* q′ (hatékony) és q0 (teljes) az alapsíkon */
+function qEff(){return sigmaEff(SOIL.D);}
+function qTot(){return sigmaTot(SOIL.D);}
+/* γ* a talp alatt — B.4(7) szerint, t_wd/B′ interpolációval */
+function gammaStar(Bp){const Lb=layerAt(SOIL.D+1e-3);const sub=Lb.gs-SOIL.gammaW;const twd=SOIL.gw-SOIL.D;
+  if(twd<=0.5*Bp)return{g:sub,case:'t_wd ≤ 0,5·B′ → γ* = γ_sat − γ_w'};
+  if(twd<1.5*Bp){const g=sub+(Lb.gm-sub)*(twd/Bp-0.5);return{g,case:'0,5·B′ < t_wd < 1,5·B′ → lineáris átmenet'};}
+  return{g:Lb.gm,case:'t_wd ≥ 1,5·B′ → γ* = γ (nedves)'};
+}
+function baseLayer(){return layerAt(SOIL.D+1e-3);}
+
+/* ===================== TALAJSZELVÉNY UI ===================== */
+function renderSoilProfile(){
+  const host=document.getElementById('soilProfileHost'); if(!host)return;
+  const cols=[['name','Megnevezés','text'],['t','t [m]','num'],['gm','γ','num'],['gs','γ_sat','num'],['phi','φ′ [°]','num'],['c','c′','num'],['cu','c_u','num'],['E','E [MPa]','num'],['nu','ν','num'],['qc','q_c [MPa]','num'],['EM','E_M [MPa]','num']];
+  let rows='';
+  SOIL.layers.forEach((L,i)=>{
+    rows+=`<tr data-i="${i}">`;
+    rows+=`<td style="text-align:center;font-weight:600;color:var(--steel-dk)">${i+1}</td>`;
+    cols.forEach(([k,,t])=>{
+      rows+=`<td><input data-i="${i}" data-k="${k}" type="${t==='num'?'number':'text'}" value="${L[k]}" step="any" style="width:100%;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
+    });
+    rows+=`<td style="text-align:center"><button data-del="${i}" style="background:var(--rebar);color:#fff;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;font-weight:700" title="Réteg törlése">×</button></td>`;
+    rows+='</tr>';
+  });
+  host.innerHTML=`
+  <div class="calc">
+    <div class="calc-head"><h3>Rétegrend, talajvíz, alapozási mélység</h3><span class="calc-tag" style="background:var(--azure)">közös adat</span></div>
+    <div class="calc-body">
+      <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px">
+        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" value="${SOIL.D}" step="0.1"></div>
+        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" value="${SOIL.gw}" step="0.1"></div>
+        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>γ_w [kN/m³]</label><input id="sp-gammaW" type="number" value="${SOIL.gammaW}" step="0.01"></div>
+      </div>
+      <div style="overflow-x:auto">
+      <table class="dt" style="font-size:0.82rem;margin:0">
+        <thead><tr><th>#</th>${cols.map(c=>`<th style="text-align:${c[2]==='num'?'right':'left'}">${c[1]}</th>`).join('')}<th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      </div>
+      <div style="margin-top:12px"><button id="sp-add" style="background:var(--moss);color:#fff;border:none;border-radius:7px;padding:8px 16px;cursor:pointer;font-weight:600;font-family:'Inter'">+ Réteg hozzáadása</button>
+      <span style="font-size:0.8rem;color:var(--ink-mute);margin-left:12px">γ = nedves térfogatsúly, γ_sat = telített [kN/m³]; c′, c_u [kPa]. Ami nem értelmezett egy rétegnél (pl. c_u szemcsésnél), hagyd 0-n.</span></div>
+    </div>
+  </div>`;
+  host.querySelectorAll('input[data-k]').forEach(el=>el.addEventListener('input',()=>{const i=+el.dataset.i,k=el.dataset.k;SOIL.layers[i][k]=(el.type==='number'?(parseFloat(el.value)||0):el.value);soilNotify();renderSoilDerived();}));
+  host.querySelectorAll('button[data-del]').forEach(b=>b.addEventListener('click',()=>{if(SOIL.layers.length<=1)return;SOIL.layers.splice(+b.dataset.del,1);renderSoilProfile();soilNotify();renderSoilDerived();}));
+  document.getElementById('sp-D').addEventListener('input',e=>{SOIL.D=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
+  document.getElementById('sp-gw').addEventListener('input',e=>{SOIL.gw=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
+  document.getElementById('sp-gammaW').addEventListener('input',e=>{SOIL.gammaW=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
+  document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20,nu:0.3,qc:5,EM:6});renderSoilProfile();soilNotify();renderSoilDerived();});
+}
+function renderSoilDerived(){
+  const host=document.getElementById('soilDerivedHost'); if(!host)return;
+  const bl=baseLayer();
+  const segs=layerTops();
+  let rows=segs.map((s,i)=>`<tr><td>${i+1}. ${s.L.name}</td><td>${fmt(s.top,2)}–${fmt(s.bot,2)} m</td><td>${fmt(sigmaTot(s.bot),1)}</td><td>${fmt(uPore(s.bot),1)}</td><td>${fmt(sigmaEff(s.bot),1)}</td></tr>`).join('');
+  host.innerHTML=`
+  <div class="panel">
+    <h3 style="margin-top:0">Származtatott értékek (élő)</h3>
+    <div class="grid c3" style="gap:12px">
+      ${dBox('q0 — teljes geosztatikus nyomás az alapsíkon',fmt(qTot(),1)+' kPa','var(--steel)')}
+      ${dBox('q′ — hatékony geosztatikus nyomás az alapsíkon',fmt(qEff(),1)+' kPa','var(--azure)')}
+      ${dBox('Alapsík alatti réteg',bl.name,'var(--moss)')}
+    </div>
+    <p style="font-size:0.86rem;color:var(--ink-mute);margin:12px 0 4px">A talp alatti réteg jellemzői: φ′ = ${fmt(bl.phi,1)}° · c′ = ${fmt(bl.c,1)} kPa · c<sub>u</sub> = ${fmt(bl.cu,1)} kPa · E = ${fmt(bl.E,1)} MPa</p>
+    <table class="dt num" style="margin-top:8px">
+      <thead><tr><th>Réteg</th><th>Mélységköz</th><th>σ_v [kPa]</th><th>u [kPa]</th><th>σ′_v [kPa]</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="font-size:0.8rem;color:var(--ink-mute)">A feszültségek a réteghatárok alján (talp alatti réteg az alapsík alatt közvetlenül). q′ és q0 a kiválasztott D = ${fmt(SOIL.D,2)} m mélységre vonatkozik; talajvízszint = ${fmt(SOIL.gw,2)} m.</p>
+  </div>`;
+}
+function dBox(lab,val,acc){return `<div style="background:#F3EEE6;padding:12px 14px;border-radius:8px;border-left:3px solid ${acc}"><div style="font-size:0.7rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.04em">${lab}</div><div style="font-family:'JetBrains Mono';font-size:1.1rem;color:var(--steel-dk);font-weight:600;margin-top:3px">${val}</div></div>`;}
+
+/* ===================== KALKULÁTOR-KERETRENDSZER ===================== */
+/* config: {id,title,tag,color,inputs:[{k,label,small,val,step,type,options}],compute(g)->{rows,formula,verdict,boxes},note,usesSoil} */
+function mkCalc(c){
+  const host=document.getElementById('calc-'+c.id); if(!host)return;
+  const inpHTML=c.inputs.map(f=>{
+    if(f.sep)return `<div class="cr-sep">${f.sep}</div>`;
+    const lab=`<label>${f.label}${f.small?`<small>${f.small}</small>`:''}</label>`;
+    if(f.type==='select')return `<div class="cr"><div>${lab}</div><select id="${c.id}__${f.k}">${f.options.map(o=>`<option value="${o.v}">${o.t}</option>`).join('')}</select></div>`;
+    return `<div class="cr"><div>${lab}</div><input id="${c.id}__${f.k}" type="number" value="${f.val}" step="${f.step||'any'}"></div>`;
+  }).join('');
+  host.innerHTML=`
+  <div class="calc-head"><h3>${c.title}</h3><span class="calc-tag" style="background:${c.color||'var(--rebar)'}">${c.tag||''}</span></div>
+  <div class="calc-body">
+    <div class="grid c2">
+      <div>${inpHTML}</div>
+      <div><div class="calc-results" id="${c.id}__res"></div></div>
+    </div>
+    ${c.note?`<p class="calc-note">${c.note}</p>`:''}
+  </div>`;
+  // set select defaults
+  c.inputs.forEach(f=>{if(f.type==='select'){const e=document.getElementById(c.id+'__'+f.k);if(e&&f.val!==undefined)e.value=f.val;}});
+  const g=k=>{const e=document.getElementById(c.id+'__'+k);if(!e)return 0;return e.tagName==='SELECT'?e.value:(parseFloat(e.value)||0);};
+  function run(){
+    let r;try{r=c.compute(g);}catch(e){console.error(e);r={rows:[['Hiba','—']]};}
+    let h=`<h4>${r.title||'Eredmény'}</h4>`;
+    if(r.boxes)h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">${r.boxes.map(b=>dBox(b[0],b[1],b[2]||'var(--steel)')).join('')}</div>`;
+    (r.rows||[]).forEach(x=>h+=rr(x[0],x[1],x[2]));
+    if(r.formula)h+=`<div class="calc-formula">${r.formula}</div>`;
+    if(r.verdict)h+=vbox(r.verdict.ok,r.verdict.line);
+    document.getElementById(c.id+'__res').innerHTML=h;
+  }
+  host.querySelectorAll('input,select').forEach(e=>{e.addEventListener('input',run);e.addEventListener('change',run);});
+  if(c.usesSoil)soilSubscribe(run);
+  run();
+}
+
+/* === INDÍTÁS === */
+renderSoilProfile();
+renderSoilDerived();
+/* ========== GEOMETRIA ========== */
+mkCalc({id:'geo-rect',title:'Hatékony keresztmetszet — téglalap',tag:'5.2',color:'var(--steel)',
+  inputs:[
+    {k:'mode',label:'Alaptípus',type:'select',val:'rect',options:[{v:'rect',t:'Téglalap / négyzet'},{v:'strip',t:'Sávalap (folyóméter)'}]},
+    {k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
+    {k:'L',label:'L hossz [m]',val:2.4,step:0.1},
+    {k:'eB',label:'e_B külpontosság (B irány) [m]',val:0.2,step:0.01},
+    {k:'eL',label:'e_L külpontosság (L irány) [m]',val:0.1,step:0.01},
+  ],
+  compute:g=>{const strip=g('mode')==='strip';const B=g('B'),L=g('L'),eB=g('eB'),eL=strip?0:g('eL');
+    const Bp=Math.max(B-2*eB,0),Lp=strip?1:Math.max(L-2*eL,0),Ap=strip?Bp:Bp*Lp;
+    return{boxes:[['B′ hatékony szélesség',fmt(Bp,3)+' m','var(--steel)'],['A′ hatékony terület',fmt(Ap,3)+(strip?' m²/m':' m²'),'var(--rebar)']],
+      rows:[['L′ hatékony hossz',strip?'— (folyóméter)':fmt(Lp,3)+' m'],['e_B / B arány',fmt(eB/B,3),'subtle'],['e_L / L arány',strip?'—':fmt(eL/L,3),'subtle'],['B′/L′ alakarány',strip?'≈ 0':fmt(Bp/Lp,3),'subtle']],
+      formula:`B′ = ${fmt(B,2)} − 2·${fmt(eB,2)} = ${fmt(Bp,3)} m${strip?'':` · L′ = ${fmt(L,2)} − 2·${fmt(eL,2)} = ${fmt(Lp,3)} m`}`};
+  }});
+
+mkCalc({id:'geo-circ',title:'Hatékony terület — kör alap',tag:'5.3 · 5.4',color:'var(--steel)',
+  inputs:[{k:'D',label:'D átmérő [m]',val:2.0,step:0.05},{k:'e',label:'e külpontosság [m]',val:0.3,step:0.01}],
+  compute:g=>{const D=g('D'),e=g('e');const x=Math.min(2*e/D,0.999);
+    const Aeff=(D*D/2)*(Math.acos(x)-x*Math.sqrt(Math.max(1-x*x,0)));
+    const rat=(D-2*e)/(D+2*e);const Beq=Math.sqrt(Aeff*rat),Leq=Math.sqrt(Aeff/rat);
+    return{boxes:[['A_eff hatékony terület',fmt(Aeff,3)+' m²','var(--rebar)'],['e/R arány',fmt(e/(D/2),3),'var(--steel)']],
+      rows:[['B′_eq egyenértékű szélesség',fmt(Beq,3)+' m'],['L′_eq egyenértékű hossz',fmt(Leq,3)+' m'],['B′_eq·L′_eq (ellenőrzés)',fmt(Beq*Leq,3)+' m²','subtle'],['teljes körterület π·D²/4',fmt(Math.PI*D*D/4,3)+' m²','subtle']],
+      formula:`A_eff = (D²/2)·[arccos(2e/D) − (2e/D)·√(1−(2e/D)²)] = ${fmt(Aeff,3)} m²`};
+  }});
+
+mkCalc({id:'geo-dim',title:'Tervezési méret méréstűréssel',tag:'5.10 · 5.11',color:'var(--steel)',
+  inputs:[{k:'mode',label:'Alaptípus',type:'select',val:'rect',options:[{v:'rect',t:'Téglalap (B)'},{v:'circ',t:'Kör (D)'}]},
+    {k:'nom',label:'Névleges méret B_nom / D_nom [m]',val:1.6,step:0.05},
+    {k:'dev',label:'Méréstűrés ΔB / ΔD [m]',small:'NDP alapérték 0,1 m',val:0.1,step:0.01}],
+  compute:g=>{const circ=g('mode')==='circ';const nom=g('nom'),dev=g('dev');const d=nom-dev;
+    return{boxes:[[circ?'D_d tervezési átmérő':'B_d tervezési szélesség',fmt(d,3)+' m','var(--rebar)']],
+      rows:[['Csökkentés',fmt(dev,3)+' m','subtle'],['Megjegyzés','B_d / D_d helyettesíti B / D-t az 5.2, 5.3, 5.6 képletekben','subtle']],
+      formula:`${circ?'D_d = D_nom':'B_d = B_nom'} − ${circ?'Δ':'Δ'}${circ?'D':'B'} = ${fmt(nom,2)} − ${fmt(dev,2)} = ${fmt(d,3)} m`};
+  }});
+
+mkCalc({id:'geo-ecc',title:'SLS külpontossági korlát',tag:'Táblázat 5.3',color:'var(--gold)',
+  inputs:[{k:'shape',label:'Alaktípus',type:'select',val:'rect',options:[{v:'strip',t:'Sávalap'},{v:'circ',t:'Kör alap'},{v:'rect',t:'Téglalap alap'}]},
+    {k:'lc',label:'Teheresetek',type:'select',val:'pv',options:[{v:'p',t:'Csak állandó (hézagmentes)'},{v:'pv',t:'Állandó + esetleges'}]},
+    {k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
+    {k:'L',label:'L hossz [m] (téglalap)',val:2.4,step:0.1},
+    {k:'R',label:'R sugár [m] (kör)',val:1.0,step:0.05},
+    {k:'eB',label:'e_B [m]',val:0.18,step:0.01},
+    {k:'eL',label:'e_L [m] (téglalap)',val:0.10,step:0.01}],
+  compute:g=>{const sh=g('shape'),pv=g('lc')==='pv';const B=g('B'),L=g('L'),R=g('R'),eB=g('eB'),eL=g('eL');
+    let val,lim,label,ok;
+    if(sh==='strip'){val=eB/B;lim=pv?1/3:1/6;label=`e_B/B = ${fmt(val,3)}`;}
+    else if(sh==='circ'){const e=Math.sqrt(eB*eB+(pv?0:0));val=eB/R;lim=pv?0.59:0.25;label=`e/R = ${fmt(val,3)}`;}
+    else{if(pv){val=Math.pow(eL/L,2)+Math.pow(eB/B,2);lim=1/9;label=`(e_L/L)²+(e_B/B)² = ${fmt(val,4)}`;}else{val=eL/L+eB/B;lim=1/6;label=`(e_L/L)+(e_B/B) = ${fmt(val,4)}`;}}
+    ok=val<=lim+1e-9;
+    return{boxes:[['Számított érték',fmt(val,4),'var(--steel)'],['Megengedett korlát',fmt(lim,4),'var(--moss)']],
+      rows:[['Teheresetek',pv?'állandó + esetleges':'csak állandó','subtle']],
+      verdict:{ok,line:`${label} ${ok?'≤':'>'} ${fmt(lim,3)}`}};
+  }});
+/* ========== TEHERBÍRÁS: közös geometria/teher mezők ========== */
+function geoLoadInputs(){return [
+  {sep:'Geometria'},
+  {k:'shape',label:'Alaktípus',type:'select',val:'rect',options:[{v:'strip',t:'Sávalap (folyóméter)'},{v:'rect',t:'Téglalap'},{v:'circ',t:'Kör (B=L=D)'}]},
+  {k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
+  {k:'L',label:'L hossz [m]',val:2.4,step:0.1},
+  {k:'eB',label:'e_B külpontosság [m]',val:0.15,step:0.01},
+  {k:'eL',label:'e_L külpontosság [m]',val:0.0,step:0.01},
+  {sep:'Geometriai tényezők'},
+  {k:'alpha',label:'α alapsík-ferdeség [°]',val:0,step:1},
+  {k:'beta',label:'β tereplejtés [°]',val:0,step:1},
+  {k:'hdir',label:'Vízszintes erő iránya',type:'select',val:'B',options:[{v:'B',t:'B-vel párhuzamos'},{v:'L',t:'L-lel párhuzamos'}]},
+  {sep:'Terhek (karakterisztikus)'},
+  {k:'Gk',label:'G_k állandó (függőleges)',small:'kN, sávnál kN/m',val:600,step:10},
+  {k:'Qk',label:'Q_k esetleges (függőleges)',val:200,step:10},
+  {k:'Hk',label:'H_k vízszintes erő',val:60,step:5},
+  {sep:'Megközelítés & parciális tényezők'},
+  {k:'app',label:'Megközelítés',type:'select',val:'MFA',options:[{v:'MFA',t:'MFA — anyagi tényező'},{v:'RFA',t:'RFA — ellenállási tényező'}]},
+  {k:'gG',label:'γ_G (állandó teher)',val:1.35,step:0.05},
+  {k:'gQ',label:'γ_Q (esetleges teher)',val:1.50,step:0.05},
+];}
+function geoCalc(g){const shape=g('shape'),strip=shape==='strip',circ=shape==='circ';
+  let B=g('B'),L=circ?g('B'):g('L');const eB=g('eB'),eL=strip||circ?0:g('eL');
+  const Bp=Math.max(B-2*eB,0.01),Lp=strip?1e9:Math.max(L-2*eL,0.01);
+  const ratio=strip?0:Bp/Lp;const Ap=strip?Bp:Bp*Lp;
+  return{shape,strip,circ,B,L,Bp,Lp,ratio,Ap,unit:strip?' kN/m':' kN'};
+}
+
+/* ---- DRÉNEZETT TEHERBÍRÁS (5.5 + B.4) ---- */
+mkCalc({id:'bear-dr',title:'Drénezett teherbírás — R_N (5.5)',tag:'GEO',color:'var(--steel)',usesSoil:true,
+  inputs:[...geoLoadInputs(),{k:'gphi',label:'γ_φ (MFA, tanφ′-re)',val:1.25,step:0.05},{k:'gc',label:'γ_c (MFA, c′-re)',val:1.25,step:0.05},{k:'gRN',label:'γ_RN (RFA)',val:1.40,step:0.05}],
+  note:'A talp alatti réteg φ′, c′ értékei és q′, γ* a <b>Talajszelvény</b>ből származnak (D = alapozási mélység). A geometriát, terheket és a megközelítést itt állítod.',
+  compute:g=>{const G=geoCalc(g);const bl=baseLayer();const Df=SOIL.D;
+    const mfa=g('app')==='MFA';const gphi=g('gphi'),gc=g('gc'),gRN=g('gRN');
+    const phiK=bl.phi,cK=bl.c;
+    const phi=mfa?Math.atan(Math.tan(d2r(phiK))/gphi)*180/Math.PI:phiK;
+    const c=mfa?cK/gc:cK;
+    const qp=qEff();const gs=gammaStar(G.Bp);const gstar=gs.g;
+    const N=Nfac(phi);const tphi=Math.tan(d2r(phi)),cot=phi>0.01?1/tphi:0;
+    // shape
+    const sq=G.strip?1:1+G.ratio*Math.sin(d2r(phi)),sg=G.strip?1:Math.max(1-0.3*G.ratio,0.6),sc=G.strip?1:(N.Nq>1?(sq*N.Nq-1)/(N.Nq-1):1);
+    // depth
+    const k=Df/G.B,dq=k<=1?1+2*tphi*Math.pow(1-Math.sin(d2r(phi)),2)*k:1+2*tphi*Math.pow(1-Math.sin(d2r(phi)),2)*Math.atan(k),dg=1,dc=phi>0.01?dq-(1-dq)/(N.Nc*tphi):1;
+    // base
+    const ar=d2r(g('alpha')),bq=Math.pow(1-ar*tphi,2),bg=bq,bc=phi>0.01?bq-(1-bq)/(N.Nc*tphi):1;
+    // ground
+    const br=d2r(g('beta')),gq=Math.pow(1-Math.tan(br),2),gg=gq,gc_=phi>0.01?gq-(1-gq)/(N.Nc*tphi):1;
+    // loads
+    const Vd=g('gG')*g('Gk')+g('gQ')*g('Qk'),Hd=g('gQ')*g('Hk');
+    // inclination
+    const denom=Vd+G.Ap*c*cot;const f=denom>0?Math.min(Hd/denom,1):0;
+    const mB=G.strip?2:(2+G.ratio)/(1+G.ratio),mL=G.strip?1:(2+1/G.ratio)/(1+1/G.ratio),m=g('hdir')==='B'?mB:mL;
+    const iq=Math.pow(Math.max(1-f,0),m),ig=Math.pow(Math.max(1-f,0),m+1),ic=phi>0.01&&N.Nq>1?(iq*N.Nq-1)/(N.Nq-1):iq;
+    const tc=c*N.Nc*bc*dc*gc_*ic*sc,tq=qp*N.Nq*bq*dq*gq*iq*sq,tg=0.5*gstar*G.Bp*N.Ng*bg*dg*gg*ig*sg;
+    const RA=tc+tq+tg,R=RA*G.Ap,Rd=mfa?R:R/gRN;
+    const ok=Rd>=Vd,u=G.unit;
+    return{title:'Eredmény — drénezett teherbírás',
+      boxes:[['R_Nd tervezési ellenállás',fmt(Rd,0)+u,'var(--moss)'],['N_d tervezési teher',fmt(Vd,0)+u,'var(--rebar)']],
+      rows:[
+        ['Alapsík alatti réteg',bl.name,'subtle'],
+        ['φ′ (karakt. → '+(mfa?'tervezési':'karakt.')+')',fmt(phiK,1)+'° → '+fmt(phi,1)+'°'],
+        ['c′ (karakt. → '+(mfa?'tervezési':'karakt.')+')',fmt(cK,1)+' → '+fmt(c,1)+' kPa'],
+        ['q′ / γ* (szelvényből)',fmt(qp,1)+' kPa / '+fmt(gstar,1)+' kN/m³'],
+        ['B′ · L′ · A′',fmt(G.Bp,2)+' · '+(G.strip?'—':fmt(G.Lp,2))+' · '+fmt(G.Ap,2)],
+        ['N_c · N_q · N_γ',fmt(N.Nc,2)+' · '+fmt(N.Nq,2)+' · '+fmt(N.Ng,2)],
+        ['s_c · s_q · s_γ',fmt(sc,3)+' · '+fmt(sq,3)+' · '+fmt(sg,3),'subtle'],
+        ['d_c · d_q · d_γ',fmt(dc,3)+' · '+fmt(dq,3)+' · '+fmt(dg,3),'subtle'],
+        ['b_c · b_q · b_γ',fmt(bc,3)+' · '+fmt(bq,3)+' · '+fmt(bg,3),'subtle'],
+        ['g_c · g_q · g_γ',fmt(gc_,3)+' · '+fmt(gq,3)+' · '+fmt(gg,3),'subtle'],
+        ['i_c · i_q · i_γ (f='+fmt(f,3)+', m='+fmt(m,2)+')',fmt(ic,3)+' · '+fmt(iq,3)+' · '+fmt(ig,3),'subtle'],
+        ['Tagok: kohéziós / mélységi / szélességi',fmt(tc,0)+' / '+fmt(tq,0)+' / '+fmt(tg,0)+' kPa'],
+        ['R_N/A′ (összes)',fmt(RA,0)+' kPa','hi'],
+        ['R_N → R_Nd',fmt(R,0)+u+(mfa?' (=R_Nd)':' / '+fmt(gRN,2))],
+      ],
+      verdict:{ok,line:`N_d = ${fmt(Vd,0)}${u} ${ok?'≤':'>'} R_Nd = ${fmt(Rd,0)}${u}`}};
+  }});
+document.getElementById('bear-factors-note').innerHTML='<b>Megjegyzés:</b> a mélységi tényezők (d) csak akkor &gt;1,0, ha a talp feletti talaj legalább olyan erős, mint az alatta lévő (§5.5.2.1 (8)); a tereplejtési (g) tényezők ≈1,0, ha a lejtő &gt;6–8·B-re van (B.4 NOTE 2).';
+
+/* ---- DRÉNEZETLEN TEHERBÍRÁS (5.1 + B.2) ---- */
+mkCalc({id:'bear-ud',title:'Drénezetlen teherbírás — R_Nu (5.1)',tag:'drénezetlen',color:'var(--azure)',usesSoil:true,
+  inputs:[...geoLoadInputs().filter(f=>f.k!=='hdir'),{k:'gcu',label:'γ_cu (MFA, c_u-ra)',val:1.40,step:0.05},{k:'gRN',label:'γ_RN (RFA)',val:1.40,step:0.05}],
+  note:'Teljes feszültségek: q0 (teljes geosztatikus nyomás) és c_u a <b>Talajszelvény</b>ből. A felhajtóerő kedvező hatása nincs figyelembe véve.',
+  compute:g=>{const G=geoCalc(g);const bl=baseLayer();const Df=SOIL.D;
+    const mfa=g('app')==='MFA';const gcu=g('gcu'),gRN=g('gRN');
+    const cuK=bl.cu;const cu=mfa?cuK/gcu:cuK;const Ncu=Math.PI+2;
+    const q0=qTot();
+    const Vd=g('gG')*g('Gk')+g('gQ')*g('Qk'),Hd=g('gQ')*g('Hk');
+    const ar=d2r(g('alpha')),br=d2r(g('beta'));
+    const bcu=1-2*ar/Ncu,dcu=1+0.33*Math.atan(Df/G.B),gcu_=Math.max(1-2*br/Ncu,0);
+    let arg=1-Hd/(G.Ap*cu);if(arg<0)arg=0;const icu=0.5*(1+Math.sqrt(arg));
+    const scu=G.strip?1:(G.circ?1.2:1+0.2*G.ratio);
+    const tc=Ncu*cu*bcu*dcu*gcu_*icu*scu,RA=tc+q0,R=RA*G.Ap,Rd=mfa?R:R/gRN;
+    const ok=Rd>=Vd,u=G.unit;
+    return{title:'Eredmény — drénezetlen teherbírás',
+      boxes:[['R_Nud tervezési ellenállás',fmt(Rd,0)+u,'var(--moss)'],['N_d tervezési teher',fmt(Vd,0)+u,'var(--rebar)']],
+      rows:[
+        ['Alapsík alatti réteg',bl.name,'subtle'],
+        ['c_u (karakt. → '+(mfa?'tervezési':'karakt.')+')',fmt(cuK,1)+' → '+fmt(cu,1)+' kPa'],
+        ['q0 (teljes, szelvényből)',fmt(q0,1)+' kPa'],
+        ['N_cu = π+2',fmt(Ncu,3)],
+        ['B′ · L′ · A′',fmt(G.Bp,2)+' · '+(G.strip?'—':fmt(G.Lp,2))+' · '+fmt(G.Ap,2)],
+        ['b_cu · d_cu · g_cu',fmt(bcu,3)+' · '+fmt(dcu,3)+' · '+fmt(gcu_,3),'subtle'],
+        ['i_cu · s_cu',fmt(icu,3)+' · '+fmt(scu,3),'subtle'],
+        ['σ_t = N_cu·c_u·(tényezők) + q0',fmt(RA,0)+' kPa','hi'],
+        ['R_Nu → R_Nud',fmt(R,0)+u+(mfa?' (=R_Nud)':' / '+fmt(gRN,2))],
+      ],
+      verdict:{ok,line:`N_d = ${fmt(Vd,0)}${u} ${ok?'≤':'>'} R_Nud = ${fmt(Rd,0)}${u}`}};
+  }});
+
+/* ---- TALAJVÍZ HATÁSA q′/γ* (B.4(7)) ---- */
+mkCalc({id:'bear-gw',title:'Talajvíz hatása — q′ és γ* (B.4(7))',tag:'B.4(7)',color:'var(--azure)',
+  inputs:[{k:'gm',label:'γ nedves [kN/m³]',val:18,step:0.5},{k:'gs',label:'γ_sat [kN/m³]',val:20,step:0.5},{k:'gw',label:'γ_w [kN/m³]',val:9.81,step:0.01},{k:'Df',label:'D_f alapozási mélység [m]',val:1.5,step:0.1},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
+    {k:'case',label:'Talajvízszint',type:'select',val:'surface',options:[{v:'surface',t:'terepszinten'},{v:'above',t:'D_w mélységben, talp felett'},{v:'base',t:'alapsík szintjén'},{v:'deep',t:'> 1,5·B-vel talp alatt'}]},
+    {k:'Dw',label:'D_w (csak „talp felett") [m]',val:0.7,step:0.1}],
+  compute:g=>{const gm=g('gm'),gs=g('gs'),gw=g('gw'),Df=g('Df'),B=g('B'),Dw=g('Dw');let q,gstar,desc;
+    const cs=g('case');
+    if(cs==='surface'){q=(gs-gw)*Df;gstar=gs-gw;desc='q′=(γ_sat−γ_w)·D_f';}
+    else if(cs==='above'){q=gm*Dw+(gs-gw)*(Df-Dw);gstar=gs-gw;desc='q′=γ·D_w+(γ_sat−γ_w)(D_f−D_w)';}
+    else if(cs==='base'){q=gm*Df;gstar=gs-gw;desc='q′=γ·D_f';}
+    else{q=gm*Df;gstar=gm;desc='q′=γ·D_f, γ*=γ';}
+    return{boxes:[['q′ hatékony geoszt. nyomás',fmt(q,1)+' kPa','var(--azure)'],['γ* talp alatti térfogatsúly',fmt(gstar,2)+' kN/m³','var(--moss)']],
+      rows:[['1,5·B kontroll-mélység',fmt(1.5*B,2)+' m','subtle']],formula:desc};
+  }});
+/* ---- B.5 erősebb kötött réteg gyengébb felett (k1) ---- */
+mkCalc({id:'bear-lay2',title:'Erősebb kötött réteg gyengébb felett — k₁ (B.5)',tag:'B.5(1)',color:'var(--steel)',
+  inputs:[{k:'Bp',label:"B′ hatékony szélesség [m]",val:1.4,step:0.05},{k:'Lp',label:"L′ hatékony hossz [m]",small:'sávnál nagy érték',val:100,step:1},{k:'D1',label:'D₁ felső réteg vastagsága a talp alatt [m]',val:0.6,step:0.1},{k:'cu1',label:'c_u1 felső (erősebb) [kPa]',val:120,step:5},{k:'cu2',label:'c_u2 alsó (gyengébb) [kPa]',val:45,step:5},{k:'q0',label:'q0 teljes geoszt. nyomás [kPa]',val:28,step:1}],
+  note:'Érvényes, ha B′ &gt; 2·D₁. A tényezőket (b,d,g,i,s) itt 1,0-nak vesszük; a teljes igazoláshoz a drénezetlen kalkulátorba k₁·c_u1-et helyettesíts.',
+  compute:g=>{const Bp=g('Bp'),Lp=g('Lp'),D1=g('D1'),cu1=g('cu1'),cu2=g('cu2'),q0=g('q0');
+    const ratio=Bp/Lp;const k1=Math.min((cu2/cu1)*(1+ratio)*(1+Bp/(2*D1)),1.0);
+    const Ncu=Math.PI+2;const RA=Ncu*k1*cu1+q0;const Ap=Lp>50?Bp:Bp*Lp;const R=RA*Ap;
+    const valid=Bp>2*D1;
+    return{boxes:[['k₁ redukciós tényező',fmt(k1,3),'var(--rebar)'],['R_Nu/A′',fmt(RA,0)+' kPa','var(--moss)']],
+      rows:[['Érvényesség (B′>2·D₁)',valid?'teljesül ✓':'NEM teljesül — vetítés/numerikus','subtle'],['R_Nu',fmt(R,0)+(Lp>50?' kN/m':' kN')]],
+      formula:`k₁ = min{ (c_u2/c_u1)(1+B′/L′)(1+B′/2D₁) ; 1,0 } = min{ ${fmt((cu2/cu1)*(1+ratio)*(1+Bp/(2*D1)),3)} ; 1 } = ${fmt(k1,3)}`};
+  }});
+
+/* ---- B.5(3) hatékony terület levetítése ---- */
+mkCalc({id:'bear-proj',title:'Hatékony terület levetítése a gyenge rétegre',tag:'B.5(3)',color:'var(--steel)',
+  inputs:[{k:'Bp',label:"B′ [m]",val:1.4,step:0.05},{k:'Lp',label:"L′ [m]",val:2.0,step:0.1},{k:'strip',label:'Sávalap?',type:'select',val:'0',options:[{v:'0',t:'Nem (téglalap)'},{v:'1',t:'Igen (folyóméter)'}]},{k:'D1',label:'D₁ erős réteg vastagsága [m]',val:0.6,step:0.1},{k:'spread',label:'Szétterülés (vízsz:függ)',small:'pl. 0,5 = 1:2',val:0.5,step:0.05}],
+  compute:g=>{const Bp=g('Bp'),Lp=g('Lp'),strip=g('strip')==='1',D1=g('D1'),sp=g('spread');
+    const Bpp=Bp+2*D1*sp,Lpp=strip?1e9:Lp+2*D1*sp;
+    const A0=strip?Bp:Bp*Lp,Ap=strip?Bpp:Bpp*Lpp;const red=A0/Ap;
+    return{boxes:[['B′ vetített',fmt(Bpp,3)+' m','var(--steel)'],['Nyomáscsökk. arány A′/A′_vet',fmt(red,3),'var(--moss)']],
+      rows:[['L′ vetített',strip?'— (sáv)':fmt(Lpp,3)+' m'],['Vetített terület',fmt(Ap,3)+(strip?' m²/m':' m²')],['Megjegyzés','a gyenge réteg tetején e méretekkel ellenőrizz (5.1/5.5)','subtle']],
+      formula:`B′_vet = B′ + 2·D₁·(szétt.) = ${fmt(Bp,2)} + 2·${fmt(D1,2)}·${fmt(sp,2)} = ${fmt(Bpp,3)} m`};
+  }});
+
+/* ---- B.6 átszúródás: szemcsés réteg kötött felett ---- */
+mkCalc({id:'bear-punch',title:'Átszúródás — szemcsés réteg kötött felett (B.6)',tag:'B.6',color:'var(--steel)',
+  inputs:[{k:'Bp',label:"B′ [m]",val:1.4,step:0.05},{k:'Lp',label:"L′ [m]",small:'sávnál nagy',val:2.0,step:0.1},{k:'cu2',label:'c_u2 alsó kötött [kPa]',val:40,step:5},{k:'D1',label:'D₁ szemcsés réteg vastagsága [m]',val:0.8,step:0.1},{k:'Df',label:'D_f alapozási mélység [m]',val:1.2,step:0.1},{k:'g1',label:'γ₁ szemcsés térfogatsúly [kN/m³]',val:19,step:0.5},{k:'phi1',label:'φ′₁ szemcsés [°]',val:35,step:1},{k:'Kps',label:'K_ps átszúr. tényező',small:'Táblázat B.1',val:4.4,step:0.1}],
+  compute:g=>{const Bp=g('Bp'),Lp=g('Lp'),cu2=g('cu2'),D1=g('D1'),Df=g('Df'),g1=g('g1'),phi1=g('phi1'),Kps=g('Kps');
+    const r=Bp/Lp;const t1=(1+0.2*r)*(Math.PI+2)*cu2;
+    const t2=g1*D1*D1*(1+2*Df/D1)*(1+r)*Kps*Math.tan(d2r(phi1))/Bp;
+    const t3=g1*Df;const qu=t1+t2+t3;const Ap=Bp*Lp;const R=qu*Ap;
+    return{boxes:[['q_u átszúródási teherbírás',fmt(qu,0)+' kPa','var(--rebar)'],['R_Nu',fmt(R,0)+' kN','var(--moss)']],
+      rows:[['Alsó réteg törése (1. tag)',fmt(t1,0)+' kPa','subtle'],['Átszúródási súrlódás (2. tag)',fmt(t2,0)+' kPa','subtle'],['Felszínteher (3. tag)',fmt(t3,0)+' kPa','subtle']],
+      formula:'q_u = (1+0,2·B′/L′)(π+2)c_u2 + γ₁·D₁²(1+2D_f/D₁)(1+B′/L′)K_ps·tanφ′₁/B′ + γ₁·D_f'};
+  }});
+
+/* ---- B.7 Ménard-presszióméteres teherbírás ---- */
+mkCalc({id:'bear-menard',title:'Teherbírás Ménard-presszióméterből (B.7)',tag:'B.7',color:'var(--azure)',
+  inputs:[{k:'sv0',label:'σ_v0 teljes függ. fesz. a talpon [kPa]',val:28,step:1},{k:'kp',label:'k_p teherbírási tényező',small:'B.6 grafikon, Q1–Q8',val:1.2,step:0.05},{k:'plm',label:'p*_LM,e nettó határnyomás [kPa]',small:'mértani közép 1,5·B-ben',val:1500,step:50},{k:'Ap',label:"A′ hatékony terület [m²]",val:3.4,step:0.1}],
+  compute:g=>{const sv0=g('sv0'),kp=g('kp'),plm=g('plm'),Ap=g('Ap');
+    const RA=sv0+kp*plm;const R=RA*Ap;
+    return{boxes:[['R_N/A′',fmt(RA,0)+' kPa','var(--azure)'],['R_N',fmt(R,0)+' kN','var(--moss)']],
+      rows:[['Felszínteher-tag σ_v0',fmt(sv0,0)+' kPa','subtle'],['Határnyomás-tag k_p·p*_LM,e',fmt(kp*plm,0)+' kPa','subtle']],
+      formula:`R_N/A′ = σ_v0 + k_p·p*_LM,e = ${fmt(sv0,0)} + ${fmt(kp,2)}·${fmt(plm,0)} = ${fmt(RA,0)} kPa`};
+  }});
+
+/* ---- B.16/B.23 szikla (Hoek–Brown) ---- */
+mkCalc({id:'bear-rock',title:'Teherbírás sziklatömbön — Hoek–Brown (B.16)',tag:'B.16',color:'var(--steel)',
+  inputs:[{k:'sci',label:'σ_ci ép kőzet egytengelyű nyom.szil. [MPa]',val:50,step:1},{k:'GSI',label:'GSI (geol. szil. index)',val:55,step:1},{k:'mi',label:'m_i (kőzettípus)',val:12,step:1},{k:'D',label:'D zavartsági tényező (0–1)',val:0,step:0.1},{k:'Cf1',label:'C_f1 alaki korr. tényező',small:'Táblázat B.6: sáv 1,0 · négyzet 1,25 · kör 1,2',val:1.25,step:0.05},{k:'Ap',label:"A′ hatékony terület [m²]",val:2.0,step:0.1}],
+  note:'A m_b, s, a paraméterek a GSI/m_i/D-ből (szabványos Hoek–Brown összefüggések). A bemutatott teherbírás a kőzettömeg-szilárdságon alapuló, alaki tényezővel korrigált <b>egyszerűsített becslés</b>; a teljes ék-egyensúlyi (B.16) megoldáshoz a hivatalos (B.23) képlet/ábra szükséges.',
+  compute:g=>{const sci=g('sci'),GSI=g('GSI'),mi=g('mi'),D=g('D'),Cf1=g('Cf1'),Ap=g('Ap');
+    const mb=mi*Math.exp((GSI-100)/(28-14*D));
+    const s=Math.exp((GSI-100)/(9-3*D));
+    const a=0.5+(1/6)*(Math.exp(-GSI/15)-Math.exp(-20/3));
+    const scm=sci*Math.pow(s,a); // kőzettömeg-szilárdság (σ3=0)
+    const qu=Cf1*scm; // egyszerűsített, alakkal korrigált [MPa]
+    const R=qu*1000*Ap; // kN
+    return{boxes:[['σ_cm kőzettömeg-szilárdság',fmt(scm,2)+' MPa','var(--azure)'],['R_N (becslés)',fmt(R,0)+' kN','var(--moss)']],
+      rows:[['m_b',fmt(mb,4)],['s',fmt(s,5)],['a',fmt(a,4)],['q_u = C_f1·σ_cm',fmt(qu,2)+' MPa','hi']],
+      formula:'m_b=m_i·e^((GSI−100)/(28−14D)) · s=e^((GSI−100)/(9−3D)) · a=0,5+(e^(−GSI/15)−e^(−20/3))/6 · σ_cm=σ_ci·s^a'};
+  }});
+/* ========== CSÚSZÁS ========== */
+function slideLoads(){return[
+  {sep:'Geometria (talp érintkező terület)'},
+  {k:'Ared',label:'A_red érintkező talpterület [m²]',small:'sávnál B′ [m²/m]',val:3.4,step:0.1},
+  {sep:'Terhek (karakterisztikus)'},
+  {k:'Gk',label:'G_k állandó függőleges',val:600,step:10},
+  {k:'Qk',label:'Q_k esetleges függőleges',val:200,step:10},
+  {k:'Hk',label:'H_k vízszintes (hajtó) erő',val:120,step:5},
+  {k:'U',label:'U felhajtóerő a talpon',small:'kN; drénezetthez',val:0,step:5},
+  {k:'Ep',label:'R_face passzív homlokellenállás (karakt.)',val:0,step:5},
+  {sep:'Tényezők'},
+  {k:'gGf',label:'γ_G a függőleges (kedvező) teherre',val:1.0,step:0.05},
+  {k:'gQf',label:'γ_Q a függőleges esetleges teherre',val:0.0,step:0.05},
+  {k:'gQh',label:'γ_Q a vízszintes (hajtó) teherre',val:1.5,step:0.05},
+  {k:'app',label:'Megközelítés',type:'select',val:'MFA',options:[{v:'MFA',t:'MFA'},{v:'RFA',t:'RFA'}]},
+];}
+
+mkCalc({id:'slide-ud',title:'Drénezetlen elcsúszás (5.13 / 5.14 / 5.15)',tag:'drénezetlen',color:'var(--gold)',usesSoil:true,
+  inputs:[...slideLoads(),{k:'kf',label:'k (kinterface)',type:'select',val:'0.6667',options:[{v:'1',t:'1,0 — érdes/bordázott talp'},{v:'0.6667',t:'2/3 — sima talp'}]},{k:'gcu',label:'γ_cu (MFA)',val:1.4,step:0.05},{k:'gRT',label:'γ_RT (RFA)',val:1.1,step:0.05},{k:'gap',label:'Rés/víz a felületen? (5.15 korlát)',type:'select',val:'1',options:[{v:'0',t:'Nem'},{v:'1',t:'Igen — R≤0,4·N_rep'}]}],
+  note:'c_u a talp alatti rétegből (Talajszelvény). Betont közvetlenül talajra öntve a talp érdes (k=1,0); előregyártott/sima esetén 2/3 (§5.5.3(8)).',
+  compute:g=>{const bl=baseLayer();const cu=bl.cu;const Ared=g('Ared'),k=parseFloat(g('kf'));
+    const mfa=g('app')==='MFA';const gcu=g('gcu'),gRT=g('gRT');
+    const cud=mfa?cu/gcu:cu;const Rbase=mfa?Ared*k*cud:Ared*k*cu/gRT;
+    const Ep=g('Ep');const Rface=mfa?Ep:Ep/1.4;const Rtot=Rbase+Rface;
+    const Nrep=g('Gk')+g('Qk');const Nd=g('gGf')*g('Gk')+g('gQf')*g('Qk');const Hd=g('gQh')*g('Hk');
+    let limit=Infinity,limited=false;if(g('gap')==='1'){limit=0.4*Nrep;if(Rbase>limit){limited=true;}}
+    const Rb=Math.min(Rbase,limit);const Rd=Rb+Rface;const ok=Hd<=Rd;const u=' kN';
+    return{boxes:[['R_Td összes ellenállás',fmt(Rd,0)+u,'var(--moss)'],['T_d hajtó erő',fmt(Hd,0)+u,'var(--rebar)']],
+      rows:[['Alapsík alatti réteg c_u',fmt(cu,0)+' kPa → '+fmt(cud,0)+' (terv.)','subtle'],['Talpellenállás R_Tud,base',fmt(Rbase,0)+u],['5.15 korlát 0,4·N_rep',g('gap')==='1'?fmt(limit,0)+u+(limited?' (mértékadó!)':''):'nem aktív','subtle'],['Homlokellenállás R_Td,face',fmt(Rface,0)+u],['Kihasználtság T_d/R_Td',fmt(Rd>0?Hd/Rd*100:999,0)+' %']],
+      verdict:{ok,line:`T_d = ${fmt(Hd,0)}${u} ${ok?'≤':'>'} R_Td = ${fmt(Rd,0)}${u}`}};
+  }});
+
+mkCalc({id:'slide-dr',title:'Drénezett elcsúszás (5.16 / 5.17 / 5.18)',tag:'drénezett',color:'var(--gold)',usesSoil:true,
+  inputs:[...slideLoads(),{k:'kf',label:'k (tanδ = k·tanφ′)',type:'select',val:'1',options:[{v:'1',t:'1,0 — érdes (helyszíni beton)'},{v:'0.6667',t:'2/3 — sima'}]},{k:'gtan',label:'γ_tanφ (MFA)',val:1.25,step:0.05},{k:'gRT',label:'γ_RT (RFA)',val:1.1,step:0.05},{k:'vc',label:'RFA ellenőrzési eset',type:'select',val:'VC1',options:[{v:'VC1',t:'VC1 — tervezési N (5.17)'},{v:'VC4',t:'VC4 — repr. N (5.18)'}]}],
+  note:'φ′ a talp alatti rétegből. A talpon c′ = 0 (§5.5.4). (N−U)-t minden tehereset-kombinációra minimalizálni kell (§5.6.4).',
+  compute:g=>{const bl=baseLayer();const phi=bl.phi,k=parseFloat(g('kf'));const tand=k*Math.tan(d2r(phi));
+    const mfa=g('app')==='MFA';const gtan=g('gtan'),gRT=g('gRT');
+    const Nrep=g('Gk')+g('Qk');const Nd=g('gGf')*g('Gk')+g('gQf')*g('Qk');const U=g('U');const Hd=g('gQh')*g('Hk');
+    let Rbase;
+    if(mfa)Rbase=(Nd-U)*tand/gtan;
+    else Rbase=g('vc')==='VC4'?(Nrep-U)*tand/gRT:(Nd-U)*tand/gRT;
+    const Ep=g('Ep');const Rface=mfa?Ep:Ep/1.4;const Rd=Rbase+Rface;const ok=Hd<=Rd;const u=' kN';
+    return{boxes:[['R_Td összes ellenállás',fmt(Rd,0)+u,'var(--moss)'],['T_d hajtó erő',fmt(Hd,0)+u,'var(--rebar)']],
+      rows:[['φ′ talp alatt',fmt(phi,1)+'°','subtle'],['tanδ = k·tanφ′',fmt(tand,3)+' (k='+fmt(k,2)+')'],['N (terv./repr.)−U',fmt((mfa||g('vc')==='VC1'?Nd:Nrep)-U,0)+u],['Talpellenállás R_Td,base',fmt(Rbase,0)+u],['Homlokellenállás R_Td,face',fmt(Rface,0)+u],['Kihasználtság',fmt(Rd>0?Hd/Rd*100:999,0)+' %']],
+      verdict:{ok,line:`T_d = ${fmt(Hd,0)}${u} ${ok?'≤':'>'} R_Td = ${fmt(Rd,0)}${u}`}};
+  }});
+
+mkCalc({id:'slide-vc4',title:'VC4 alkalmazhatósági feltétel (5.19)',tag:'5.19',color:'var(--gold)',
+  inputs:[{k:'Trep',label:'T_rep érintő (vízszintes) erő [kN]',val:120,step:5},{k:'Nrep',label:'N_rep normál (függőleges) erő [kN]',val:800,step:10}],
+  compute:g=>{const T=g('Trep'),N=g('Nrep');const lim=0.2*N;const ok=T<=lim;
+    return{boxes:[['T_rep',fmt(T,0)+' kN','var(--rebar)'],['0,2·N_rep korlát',fmt(lim,0)+' kN','var(--moss)']],
+      rows:[['T_rep/N_rep arány',fmt(N>0?T/N:0,3),'subtle']],
+      verdict:{ok,line:`T_rep = ${fmt(T,0)} ${ok?'≤':'>'} 0,2·N_rep = ${fmt(lim,0)} kN → VC4 ${ok?'alkalmazható':'NEM alkalmazható (VC1 használandó)'}`}};
+  }});
+/* ========== SÜLLYEDÉS ========== */
+mkCalc({id:'set-elastic',title:'Rugalmas süllyedés (B.10)',tag:'B.10',color:'var(--azure)',
+  inputs:[{k:'p',label:'p_rep talpfeszültség [kPa]',val:180,step:5},{k:'B',label:'B szélesség [m] (kör: D)',val:1.6,step:0.05},{k:'nu',label:'ν Poisson-tényező',val:0.3,step:0.05},{k:'Em',label:'E_m,rep talajmodulus [MPa]',val:25,step:1},
+    {k:'stiff',label:'Merevség',type:'select',val:'rig',options:[{v:'flex',t:'Hajlékony (átlag)'},{v:'rig',t:'Merev'}]},
+    {k:'LB',label:'L/B alakarány',type:'select',val:'1',options:[{v:'circ',t:'Kör'},{v:'1',t:'1'},{v:'2',t:'2'},{v:'3',t:'3'},{v:'5',t:'5'},{v:'10',t:'10'}]},
+    {k:'Is',label:'I_s (0 = táblázatból)',small:'felülírás',val:0,step:0.01}],
+  compute:g=>{const p=g('p'),B=g('B'),nu=g('nu'),Em=g('Em');
+    const tbl={flex:{circ:0.85,'1':0.95,'2':1.30,'3':1.53,'5':1.83,'10':2.25},rig:{circ:0.79,'1':0.83,'2':1.21,'3':1.43,'5':1.72,'10':2.13}};
+    let Is=g('Is');if(Is<=0)Is=tbl[g('stiff')][g('LB')];
+    const s=p*B*(1-nu*nu)*Is/(Em*1000);
+    return{boxes:[['s süllyedés',fmt(s*1000,1)+' mm','var(--rebar)'],['I_s befolyásoló tényező',fmt(Is,3),'var(--steel)']],
+      rows:[['(1−ν²)',fmt(1-nu*nu,3),'subtle'],['E_m,rep',fmt(Em,1)+' MPa','subtle']],
+      formula:`s = p·B·(1−ν²)·I_s/E_m = ${fmt(p,0)}·${fmt(B,2)}·${fmt(1-nu*nu,3)}·${fmt(Is,3)}/${fmt(Em*1000,0)} = ${fmt(s*1000,1)} mm`};
+  }});
+
+mkCalc({id:'set-menard',title:'Süllyedés Ménard-presszióméterből (B.12)',tag:'B.12',color:'var(--azure)',
+  inputs:[{k:'q',label:'q talpnyomás [kPa]',val:180,step:5},{k:'sv0',label:'σ_v0 kezdeti függ. fesz. [kPa]',val:28,step:1},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},{k:'Ec',label:'E_c (gömbi modulus, B/2) [MPa]',val:9,step:0.5},{k:'Ed',label:'E_d (deviátoros, 8B) [MPa]',val:7,step:0.5},
+    {k:'LB',label:'L/B (alaktényezőkhöz)',type:'select',val:'2',options:[{v:'circ',t:'Kör'},{v:'sq',t:'Négyzet'},{v:'2',t:'2'},{v:'3',t:'3'},{v:'5',t:'5'},{v:'20',t:'20'}]},
+    {k:'alpha',label:'α reológiai tényező',small:'B.5 tábla (0,25–1,0)',val:0.5,step:0.05}],
+  compute:g=>{const q=g('q'),sv0=g('sv0'),B=g('B'),Ec=g('Ec')*1000,Ed=g('Ed')*1000,al=g('alpha');const B0=0.6;
+    const ld={circ:1,sq:1.12,'2':1.53,'3':1.78,'5':2.14,'20':2.65},lc={circ:1,sq:1.1,'2':1.2,'3':1.3,'5':1.4,'20':1.5};
+    const lamD=ld[g('LB')],lamC=lc[g('LB')];
+    const sd=(2*B0/(9*Ed))*Math.pow(lamD*B/B0,al);
+    const sc=al*lamC*B/(9*Ec);
+    const s=(q-sv0)*(sd+sc);
+    return{boxes:[['s teljes süllyedés',fmt(s*1000,1)+' mm','var(--rebar)']],
+      rows:[['λ_c · λ_d alaktényezők',fmt(lamC,2)+' · '+fmt(lamD,2),'subtle'],['Deviátoros tag s_d',fmt((q-sv0)*sd*1000,1)+' mm'],['Gömbi tag s_c',fmt((q-sv0)*sc*1000,1)+' mm'],['(q−σ_v0)',fmt(q-sv0,0)+' kPa','subtle']],
+      formula:'s = (q−σ_v0)·[2B₀/(9E_d)·(λ_d·B/B₀)^α + α·λ_c·B/(9E_c)]'};
+  }});
+
+mkCalc({id:'set-cpt',title:'Süllyedés CPT-ből — Schmertmann (B.13/B.14)',tag:'B.13',color:'var(--azure)',
+  inputs:[{k:'q',label:'q talpnyomás (teljes) [kPa]',val:180,step:5},{k:'svp',label:"σ′_vp hatékony fesz. a talpon [kPa]",val:24,step:1},{k:'svz',label:"σ′_v0 hatékony fesz. I_z,max mélységében [kPa]",val:40,step:1},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
+    {k:'shape',label:'Alaktípus',type:'select',val:'sq',options:[{v:'sq',t:'Négyzet / kör (axisz.)'},{v:'strip',t:'Sáv (L/B≥10)'}]},
+    {k:'t',label:'t idő [év] (kúszás)',val:10,step:1},{k:'Ep',label:"E′ rugalmassági modulus [MPa]",small:'E′≈2,5–3,5·q_c (NC homok)',val:20,step:1}],
+  note:'Egyenletes E′-vel integrálva. Rétegzett talajnál a Σ(I_z/E′)·Δz összeget rétegenként kell képezni — itt egy reprezentatív E′-vel becsülünk. σ′ értékek a Talajszelvényből leolvashatók.',
+  compute:g=>{const q=g('q'),svp=g('svp'),svz=g('svz'),B=g('B'),t=g('t'),Ep=g('Ep')*1000;const strip=g('shape')==='strip';
+    const net=q-svp;const Izmax=0.5+0.1*Math.sqrt(Math.max(net,0)/Math.max(svz,1e-6));
+    const C1=Math.max(1-0.5*svp/Math.max(q-svp,1e-6),0.5);
+    const C2=1+0.2*Math.log10(Math.max(10*t,1));
+    const C3=strip?1.75:1.25;
+    const area=strip?B*(0.1+2*Izmax):B*(0.025+Izmax); // ∫Iz dz [m]
+    const s=C1*C2*C3*(q-svp)*area/Ep;
+    return{boxes:[['s süllyedés',fmt(s*1000,1)+' mm','var(--rebar)'],['I_z,max',fmt(Izmax,3),'var(--steel)']],
+      rows:[['C₁ (mélység)',fmt(C1,3),'subtle'],['C₂ (kúszás, t='+fmt(t,0)+' év)',fmt(C2,3),'subtle'],['C₃ (alak)',fmt(C3,2),'subtle'],['∫I_z dz',fmt(area,3)+' m','subtle'],['Befolyásmélység',(strip?'4·B = '+fmt(4*B,2):'2·B = '+fmt(2*B,2))+' m','subtle']],
+      formula:'s = C₁·C₂·C₃·(q−σ′_vp)·Σ(I_z/E′)Δz · I_z,max = 0,5+0,1√[(q−σ′_vp)/σ′_v0]'};
+  }});
+/* ========== IGAZOLÁSOK ========== */
+mkCalc({id:'ver-bear',title:'Teherbírási igazolás N_d ≤ R_Nd (5.9)',tag:'5.9',color:'var(--moss)',
+  inputs:[{k:'Gk',label:'G_k állandó',val:600,step:10},{k:'Qk',label:'Q_k esetleges',val:200,step:10},{k:'gG',label:'γ_G',val:1.35,step:0.05},{k:'gQ',label:'γ_Q',val:1.5,step:0.05},{k:'RNd',label:'R_Nd tervezési teherbírás [kN]',small:'a Teherbírás fejezetből',val:1300,step:10}],
+  compute:g=>{const Nd=g('gG')*g('Gk')+g('gQ')*g('Qk');const RNd=g('RNd');const ok=Nd<=RNd;
+    return{boxes:[['N_d tervezési teher',fmt(Nd,0)+' kN','var(--rebar)'],['R_Nd ellenállás',fmt(RNd,0)+' kN','var(--moss)']],
+      rows:[['Kihasználtság N_d/R_Nd',fmt(RNd>0?Nd/RNd*100:999,0)+' %']],
+      verdict:{ok,line:`N_d = ${fmt(Nd,0)} kN ${ok?'≤':'>'} R_Nd = ${fmt(RNd,0)} kN`}};
+  }});
+
+mkCalc({id:'ver-slide',title:'Csúszási igazolás T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
+  inputs:[{k:'Hk',label:'H_k vízszintes erő',val:120,step:5},{k:'gQ',label:'γ_Q (hajtó teher)',val:1.5,step:0.05},{k:'Rbase',label:'R_Td,base talpellenállás [kN]',val:300,step:5},{k:'Rface',label:'R_Td,face homlokellenállás [kN]',val:0,step:5}],
+  compute:g=>{const Td=g('gQ')*g('Hk');const Rd=g('Rbase')+g('Rface');const ok=Td<=Rd;
+    return{boxes:[['T_d hajtó erő',fmt(Td,0)+' kN','var(--rebar)'],['R_Td ellenállás',fmt(Rd,0)+' kN','var(--moss)']],
+      rows:[['Talp + homlok',fmt(g('Rbase'),0)+' + '+fmt(g('Rface'),0)+' kN','subtle'],['Kihasználtság',fmt(Rd>0?Td/Rd*100:999,0)+' %']],
+      verdict:{ok,line:`T_d = ${fmt(Td,0)} kN ${ok?'≤':'>'} R_Td = ${fmt(Rd,0)} kN`}};
+  }});
+
+mkCalc({id:'ver-dmin',title:'Minimális feltárási mélység (Táblázat 5.1)',tag:'5.1',color:'var(--moss)',
+  inputs:[{k:'type',label:'Alaptípus',type:'select',val:'sq',options:[{v:'sq',t:'Négyzetes / kör alap (3·B)'},{v:'strip',t:'Sávalap (5·B)'},{v:'raft',t:'Lemez / alapcsoport (1,5·B)'}]},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05}],
+  compute:g=>{const B=g('B');const fac={sq:3,strip:5,raft:1.5}[g('type')];const dmin=Math.max(fac*B,6);
+    return{boxes:[['d_min minimális mélység',fmt(dmin,2)+' m','var(--rebar)']],
+      rows:[[fac+'·B',fmt(fac*B,2)+' m','subtle'],['6 m minimum','6,00 m','subtle']],
+      formula:`d_min = max{${fac}·B; 6 m} = max{${fmt(fac*B,2)}; 6} = ${fmt(dmin,2)} m`};
+  }});
+
+/* ========== MEREVSÉG & RUGÓK ========== */
+mkCalc({id:'stiff-ks',title:'Alap relatív merevsége K_s (B.15)',tag:'B.15',color:'var(--steel)',
+  inputs:[{k:'Ef',label:'E_f alap anyagmodulusa [MPa]',small:'beton ~30000',val:30000,step:500},{k:'Eg',label:'E_g talajmodulus [MPa]',val:25,step:1},{k:'nuf',label:'ν_f alap',val:0.2,step:0.05},{k:'nug',label:'ν_g talaj',val:0.3,step:0.05},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},{k:'L',label:'L hossz [m]',val:2.4,step:0.1},{k:'tf',label:'t_f alapvastagság [m]',val:0.5,step:0.05}],
+  compute:g=>{const Ef=g('Ef'),Eg=g('Eg'),nuf=g('nuf'),nug=g('nug'),B=g('B'),L=g('L'),tf=g('tf');
+    const Ks=5.57*(Ef/Eg)*((1-nug*nug)/(1-nuf*nuf))*Math.pow(B/L,0.5)*Math.pow(tf/B,3);
+    let cl,col;if(Ks>10){cl='MEREV (K_s > 10)';col='var(--moss)';}else if(Ks<0.05){cl='HAJLÉKONY (K_s < 0,05)';col='var(--rebar)';}else{cl='ÁTMENETI (0,05–10)';col='var(--gold)';}
+    return{boxes:[['K_s relatív merevség',fmt(Ks,4),'var(--rebar)'],['Besorolás',cl,col]],
+      rows:[['E_f/E_g',fmt(Ef/Eg,1),'subtle'],['(t_f/B)³',fmt(Math.pow(tf/B,3),4),'subtle'],['(B/L)^0,5',fmt(Math.pow(B/L,0.5),3),'subtle']],
+      formula:'K_s = 5,57·(E_f/E_g)·[(1−ν_g²)/(1−ν_f²)]·(B/L)^0,5·(t_f/B)³'};
+  }});
+
+mkCalc({id:'stiff-sub',title:'Ágyazási tényező k_subgrade (B.16)',tag:'B.16',color:'var(--steel)',
+  inputs:[{k:'E',label:'E talajmodulus [MPa]',val:25,step:1},{k:'nu',label:'ν talaj',val:0.3,step:0.05},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},{k:'Ef',label:'E_f alap anyagmodulusa [MPa]',val:30000,step:500},{k:'tf',label:'t_f alapvastagság [m]',val:0.5,step:0.05}],
+  note:'Vesić-féle alak: I_f = t_f³/12 (egységnyi szélességre). A 12. gyök alatti tag közel egységnyi.',
+  compute:g=>{const E=g('E')*1000,nu=g('nu'),B=g('B'),Ef=g('Ef')*1000,tf=g('tf');const If=Math.pow(tf,3)/12;
+    const root=Math.pow(E*Math.pow(B,4)/(Ef*If),1/12);
+    const ks=(0.65/(1-nu*nu))*(E/B)*root;
+    return{boxes:[['k_subgrade',fmt(ks,0)+' kN/m³','var(--rebar)']],
+      rows:[['I_f = t_f³/12',fmt(If,4)+' m⁴/m','subtle'],['12. gyök tag',fmt(root,4),'subtle'],['E/B',fmt(E/B,0)+' kN/m³','subtle']],
+      formula:'k_subgrade = [0,65/(1−ν²)]·(E/B)·¹²√(E·B⁴/(E_f·I_f))'};
+  }});
+
+mkCalc({id:'stiff-spring',title:'Lineáris rugómerevségek (B.17–B.22)',tag:'B.15',color:'var(--steel)',
+  inputs:[{k:'G',label:'G talaj nyíró-modulusa [MPa]',val:10,step:0.5},{k:'nu',label:'ν talaj',val:0.3,step:0.05},{k:'B',label:'B szélesség (kisebb) [m]',val:1.6,step:0.05},{k:'L',label:'L hossz (nagyobb) [m]',val:2.4,step:0.1}],
+  compute:g=>{const G=g('G')*1000,nu=g('nu'),B=g('B'),L=g('L');const r=L/B;
+    const Kyy=G*B/(2-nu)*(2+2.5*Math.pow(r,0.85));
+    const Kxx=G*B/(2-nu)*(1.2+3.3*Math.pow(r,0.65));
+    const Kzz=G*B/(1-nu)*(0.73+1.54*Math.pow(r,0.75));
+    const Krx=G*Math.pow(B,3)/(8*(1-nu))*(0.4+3.2*r);
+    const Kry=G*Math.pow(B,3)/(8*(1-nu))*(3.6*Math.pow(r,2.4));
+    const Krz=G*Math.pow(B,3)/8*(4.1+4.2*Math.pow(r,2.45));
+    return{boxes:[['K_zz függőleges',fmt(Kzz,0)+' kN/m','var(--moss)'],['L/B',fmt(r,2),'var(--steel)']],
+      rows:[['K_xx vízszintes (x)',fmt(Kxx,0)+' kN/m'],['K_yy vízszintes (y)',fmt(Kyy,0)+' kN/m'],['K_zz függőleges (z)',fmt(Kzz,0)+' kN/m'],['K_rx billentő (x körül)',fmt(Krx,0)+' kN·m/rad'],['K_ry billentő (y körül)',fmt(Kry,0)+' kN·m/rad'],['K_rz csavaró (z körül)',fmt(Krz,0)+' kN·m/rad']],
+      formula:'K_zz = G·B/(1−ν)·[0,73+1,54·(L/B)^0,75] · stb. (B.17–B.22)'};
+  }});
+/*<!--CALCS-->*/
+
+const initCh=(location.hash||'').replace('#','');
+setChapter(CHAPTERS.find(c=>c.id===initCh)?initCh:'bevezetes');
+</script>
+</body>
+</html>
