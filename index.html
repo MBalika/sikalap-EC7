@@ -174,7 +174,7 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
       <ol style="padding-left:22px;line-height:1.95">
         <li><b>Talajszelvény</b> — itt veszed fel a rétegeket (tetszőleges számban), a talajvízszintet és az alapozási mélységet. Ez a <b>közös adatforrás</b>: minden kalkulátor innen veszi a geosztatikus nyomást (q′, q0), a térfogatsúlyt (γ*) és az alapsík alatti réteg szilárdsági paramétereit.</li>
         <li><b>Geometria</b> — a dolgozó (hatékony) keresztmetszet külpontosság mellett, tervezési méretek, SLS-külpontossági korlátok.</li>
-        <li><b>Teherbírás · Csúszás · Süllyedés</b> — a határállapot-számítások, mindegyik a szabványi képlettel és minden résztényezővel.</li>
+        <li><b>Teherbírás · Elcsúszás · Süllyedés</b> — a határállapot-számítások, mindegyik a szabványi képlettel és minden résztényezővel.</li>
         <li><b>Igazolások</b> — a megfelelőség (Nd ≤ RNd, Td ≤ RTd) MFA és RFA szerint, a parciális tényezőkkel (Táblázat 5.2).</li>
         <li><b>Merevség &amp; rugók</b> — relatív merevség, ágyazási tényező, lineáris rugómerevségek.</li>
       </ol>
@@ -218,7 +218,7 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
   <section class="subsection" id="t-1">
     <h2>Talajszelvény — közös adatforrás</h2>
     <p>Itt veszed fel a <b>rétegeket tetszőleges számban</b>, a <b>talajvízszintet</b> és az <b>alapozási mélységet (D)</b>. Minden további kalkulátor ebből a szelvényből számítja automatikusan a geosztatikus feszültségeket és az alapsík alatti réteg jellemzőit. A „+ Réteg" gombbal bővíthető, az egyes sorok törölhetők.</p>
-    <div class="callout note">A program a réteghatárokat felülről lefelé, a megadott vastagságokból összegzi. A szilárdsági paramétereket (φ′, c′, c<sub>u</sub>) és a merevségeket (E, ν, q<sub>c</sub>, E<sub>M</sub>) rétegenként add meg — a teherbírás, csúszás és süllyedés a megfelelő réteg(ek)ből dolgozik.</div>
+    <div class="callout note">A program a réteghatárokat felülről lefelé, a megadott vastagságokból összegzi. A szilárdsági paramétereket (φ′, c′, c<sub>u</sub>) és a merevségeket (E, ν, q<sub>c</sub>, E<sub>M</sub>) rétegenként add meg — a teherbírás, elcsúszás és süllyedés a megfelelő réteg(ek)ből dolgozik.</div>
     <div id="soilProfileHost"></div>
     <div id="soilDerivedHost"></div>
   </section>
@@ -443,7 +443,7 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
         <tr><td>Hatékony kohézió (c′)</td><td>γ<sub>c</sub></td><td>1,25 (M2)</td><td>1,0</td></tr>
         <tr><td>Drénezetlen ny.szil. (c<sub>u</sub>)</td><td>γ<sub>cu</sub></td><td>1,4 (M2)</td><td>1,0</td></tr>
         <tr><td>Teherbírási ellenállás</td><td>γ<sub>RN</sub></td><td>1,0</td><td>1,4</td></tr>
-        <tr><td>Csúszási ellenállás</td><td>γ<sub>RT</sub></td><td>1,0</td><td>1,1</td></tr>
+        <tr><td>Elcsúszási ellenállás</td><td>γ<sub>RT</sub></td><td>1,0</td><td>1,1</td></tr>
         <tr><td>Passzív (homlok-) ellenállás</td><td>γ<sub>RT,face</sub></td><td>1,0</td><td>1,4</td></tr>
       </tbody>
     </table>
@@ -458,7 +458,7 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
   </section>
 
   <section class="subsection" id="i-3">
-    <h2>Csúszási igazolás <span class="refbadge">§5.6.4 (5.12)</span></h2>
+    <h2>Elcsúszási igazolás <span class="refbadge">§5.6.4 (5.12)</span></h2>
     <div class="callout formula" style="text-align:center">T<sub>d</sub> ≤ R<sub>Td,base</sub> + R<sub>Td,face</sub> &nbsp;(5.12)</div>
     <div class="calc" id="calc-ver-slide"></div>
   </section>
@@ -527,9 +527,9 @@ const CHAPTERS = [
   {id:'talaj', label:'Talajszelvény', subsections:[]},
   {id:'geometria', label:'Geometria', subsections:[{id:'g-1',label:'Hatékony km.'},{id:'g-2',label:'Kör alap'},{id:'g-3',label:'Tervezési méret'},{id:'g-4',label:'SLS külpont.'}]},
   {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-1',label:'Drénezetlen'},{id:'b-2',label:'Drénezett'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-6',label:'Ménard'},{id:'b-7',label:'Szikla'}]},
-  {id:'csuszas', label:'Csúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-1',label:'Drénezetlen'},{id:'c-2',label:'Drénezett'},{id:'c-3',label:'VC4'}]},
+  {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-1',label:'Drénezetlen'},{id:'c-2',label:'Drénezett'},{id:'c-3',label:'VC4'}]},
   {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-2',label:'Ménard'},{id:'s-3',label:'CPT'}]},
-  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Csúszás'},{id:'i-4',label:'Feltárás'}]},
+  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'},{id:'i-4',label:'Feltárás'}]},
   {id:'merevseg', label:'Merevség & rugók', subsections:[{id:'m-1',label:'Relatív mer.'},{id:'m-2',label:'Ágyazási t.'},{id:'m-3',label:'Rugók'}]},
 ];
 function setChapter(chId){
@@ -558,7 +558,7 @@ function vbox(ok,line){return `<div class="verdict ${ok?'ok':'fail'}"><span clas
 function Nfac(phi){const r=d2r(phi);if(phi<=0.01)return{Nq:1,Nc:5.14,Ng:0};const Nq=Math.exp(Math.PI*Math.tan(r))*Math.pow(Math.tan(Math.PI/4+r/2),2);const Nc=(Nq-1)/Math.tan(r);const Ng=2*(Nq-1)*Math.tan(r);return{Nq,Nc,Ng};}
 
 /* ===================== TALAJSZELVÉNY-MODELL ===================== */
-const GW_DENS=9.81;
+const GW_DENS=10;  /* a víz térfogatsúlya rögzített: 10 kN/m³ */
 const SOIL={
   D:1.2, gw:3.5, gammaW:GW_DENS,
   layers:[
@@ -611,7 +611,7 @@ function renderSoilProfile(){
       <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px">
         <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" value="${SOIL.D}" step="0.1"></div>
         <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" value="${SOIL.gw}" step="0.1"></div>
-        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>γ<sub>w</sub> [kN/m³]</label><input id="sp-gammaW" type="number" value="${SOIL.gammaW}" step="0.01"></div>
+        <div class="cr" style="grid-template-columns:auto auto;gap:8px"><label>γ<sub>w</sub> víz térfogatsúlya</label><span style="font-family:'JetBrains Mono';color:var(--steel-dk);font-weight:600">10 kN/m³ (rögzített)</span></div>
       </div>
       <div style="overflow-x:auto">
       <table class="dt" style="font-size:0.82rem;margin:0">
@@ -627,7 +627,7 @@ function renderSoilProfile(){
   host.querySelectorAll('button[data-del]').forEach(b=>b.addEventListener('click',()=>{if(SOIL.layers.length<=1)return;SOIL.layers.splice(+b.dataset.del,1);renderSoilProfile();soilNotify();renderSoilDerived();}));
   document.getElementById('sp-D').addEventListener('input',e=>{SOIL.D=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
   document.getElementById('sp-gw').addEventListener('input',e=>{SOIL.gw=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
-  document.getElementById('sp-gammaW').addEventListener('input',e=>{SOIL.gammaW=parseFloat(e.target.value)||0;soilNotify();renderSoilDerived();});
+  SOIL.gammaW=GW_DENS; /* mindig 10 kN/m³ */
   document.getElementById('sp-add').addEventListener('click',()=>{SOIL.layers.push({name:'Új réteg',t:2,gm:18,gs:20,phi:28,c:0,cu:0,E:20,nu:0.3,qc:5,EM:6});renderSoilProfile();soilNotify();renderSoilDerived();});
 }
 function renderSoilDerived(){
@@ -857,10 +857,11 @@ mkCalc({id:'bear-ud',title:'Drénezetlen teherbírás — R_Nu (5.1)',tag:'drén
 
 /* ---- TALAJVÍZ HATÁSA q′/γ* (B.4(7)) ---- */
 mkCalc({id:'bear-gw',title:'Talajvíz hatása — q′ és γ* (B.4(7))',tag:'B.4(7)',color:'var(--azure)',
-  inputs:[{k:'gm',label:'γ nedves [kN/m³]',val:18,step:0.5},{k:'gs',label:'γ_sat [kN/m³]',val:20,step:0.5},{k:'gw',label:'γ_w [kN/m³]',val:9.81,step:0.01},{k:'Df',label:'D_f alapozási mélység [m]',val:1.5,step:0.1},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
+  inputs:[{k:'gm',label:'γ nedves [kN/m³]',val:18,step:0.5},{k:'gs',label:'γ_sat [kN/m³]',val:20,step:0.5},{k:'Df',label:'D_f alapozási mélység [m]',val:1.5,step:0.1},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05},
     {k:'case',label:'Talajvízszint',type:'select',val:'surface',options:[{v:'surface',t:'terepszinten'},{v:'above',t:'D_w mélységben, talp felett'},{v:'base',t:'alapsík szintjén'},{v:'deep',t:'> 1,5·B-vel talp alatt'}]},
     {k:'Dw',label:'D_w (csak „talp felett") [m]',val:0.7,step:0.1}],
-  compute:g=>{const gm=g('gm'),gs=g('gs'),gw=g('gw'),Df=g('Df'),B=g('B'),Dw=g('Dw');let q,gstar,desc;
+  note:'A víz térfogatsúlya rögzített: γ<sub>w</sub> = 10 kN/m³.',
+  compute:g=>{const gm=g('gm'),gs=g('gs'),gw=GW_DENS,Df=g('Df'),B=g('B'),Dw=g('Dw');let q,gstar,desc;
     const cs=g('case');
     if(cs==='surface'){q=(gs-gw)*Df;gstar=gs-gw;desc='q′=(γ_sat−γ_w)·D_f';}
     else if(cs==='above'){q=gm*Dw+(gs-gw)*(Df-Dw);gstar=gs-gw;desc='q′=γ·D_w+(γ_sat−γ_w)(D_f−D_w)';}
@@ -1039,7 +1040,7 @@ mkCalc({id:'ver-bear',title:'Teherbírási igazolás N_d ≤ R_Nd (5.9)',tag:'5.
       verdict:{ok,line:`N_d = ${fmt(Nd,0)} kN ${ok?'≤':'>'} R_Nd = ${fmt(RNd,0)} kN`}};
   }});
 
-mkCalc({id:'ver-slide',title:'Csúszási igazolás T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
+mkCalc({id:'ver-slide',title:'Elcsúszási igazolás T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
   inputs:[{k:'Hk',label:'H_k vízszintes erő',val:120,step:5},{k:'gQ',label:'γ_Q (hajtó teher)',val:1.5,step:0.05},{k:'Rbase',label:'R_Td,base talpellenállás [kN]',val:300,step:5},{k:'Rface',label:'R_Td,face homlokellenállás [kN]',val:0,step:5}],
   compute:g=>{const Td=g('gQ')*g('Hk');const Rd=g('Rbase')+g('Rface');const ok=Td<=Rd;
     return{boxes:[['T_d hajtó erő',fmt(Td,0)+' kN','var(--rebar)'],['R_Td ellenállás',fmt(Rd,0)+' kN','var(--moss)']],
