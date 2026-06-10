@@ -548,9 +548,11 @@ function setChapter(chId){
 
 /* ===================== SEGÉDFÜGGVÉNYEK ===================== */
 const fmt=(v,d=2)=>{if(v===null||v===undefined||!isFinite(v))return '—';if(Math.abs(v)<1e-9)v=0;return v.toFixed(d).replace('.',',');};
+/* X_yz alsó index jelölés → valódi <sub> (jobb alsó index) */
+function S(t){return (''+t).replace(/([A-Za-zÀ-ÿα-ωΑ-Ω0-9′″*)])_([A-Za-z0-9α-ωΑ-Ω]+(?:,[A-Za-z0-9α-ωΑ-Ω]+)*)/g,'$1<sub>$2</sub>');}
 const d2r=d=>d*Math.PI/180;
-function rr(l,v,cls){return `<div class="res-row${cls?' '+cls:''}"><span>${l}</span><span class="val">${v}</span></div>`;}
-function vbox(ok,line){return `<div class="verdict ${ok?'ok':'fail'}"><span class="big">${ok?'MEGFELEL ✓':'NEM FELEL MEG ✗'}</span>${line}</div>`;}
+function rr(l,v,cls){return `<div class="res-row${cls?' '+cls:''}"><span>${S(l)}</span><span class="val">${S(v)}</span></div>`;}
+function vbox(ok,line){return `<div class="verdict ${ok?'ok':'fail'}"><span class="big">${ok?'MEGFELEL ✓':'NEM FELEL MEG ✗'}</span>${S(line)}</div>`;}
 
 /* drénezett teherbírási tényezők */
 function Nfac(phi){const r=d2r(phi);if(phi<=0.01)return{Nq:1,Nc:5.14,Ng:0};const Nq=Math.exp(Math.PI*Math.tan(r))*Math.pow(Math.tan(Math.PI/4+r/2),2);const Nc=(Nq-1)/Math.tan(r);const Ng=2*(Nq-1)*Math.tan(r);return{Nq,Nc,Ng};}
@@ -609,16 +611,16 @@ function renderSoilProfile(){
       <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px">
         <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Alapozási mélység <b>D</b> [m]</label><input id="sp-D" type="number" value="${SOIL.D}" step="0.1"></div>
         <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>Talajvízszint [m, terep alatt]</label><input id="sp-gw" type="number" value="${SOIL.gw}" step="0.1"></div>
-        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>γ_w [kN/m³]</label><input id="sp-gammaW" type="number" value="${SOIL.gammaW}" step="0.01"></div>
+        <div class="cr" style="grid-template-columns:auto 110px;gap:8px"><label>γ<sub>w</sub> [kN/m³]</label><input id="sp-gammaW" type="number" value="${SOIL.gammaW}" step="0.01"></div>
       </div>
       <div style="overflow-x:auto">
       <table class="dt" style="font-size:0.82rem;margin:0">
-        <thead><tr><th>#</th>${cols.map(c=>`<th style="text-align:${c[2]==='num'?'right':'left'}">${c[1]}</th>`).join('')}<th></th></tr></thead>
+        <thead><tr><th>#</th>${cols.map(c=>`<th style="text-align:${c[2]==='num'?'right':'left'}">${S(c[1])}</th>`).join('')}<th></th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
       </div>
       <div style="margin-top:12px"><button id="sp-add" style="background:var(--moss);color:#fff;border:none;border-radius:7px;padding:8px 16px;cursor:pointer;font-weight:600;font-family:'Inter'">+ Réteg hozzáadása</button>
-      <span style="font-size:0.8rem;color:var(--ink-mute);margin-left:12px">γ = nedves térfogatsúly, γ_sat = telített [kN/m³]; c′, c_u [kPa]. Ami nem értelmezett egy rétegnél (pl. c_u szemcsésnél), hagyd 0-n.</span></div>
+      <span style="font-size:0.8rem;color:var(--ink-mute);margin-left:12px">γ = nedves térfogatsúly, γ<sub>sat</sub> = telített [kN/m³]; c′, c<sub>u</sub> [kPa]. Ami nem értelmezett egy rétegnél (pl. c<sub>u</sub> szemcsésnél), hagyd 0-n.</span></div>
     </div>
   </div>`;
   host.querySelectorAll('input[data-k]').forEach(el=>el.addEventListener('input',()=>{const i=+el.dataset.i,k=el.dataset.k;SOIL.layers[i][k]=(el.type==='number'?(parseFloat(el.value)||0):el.value);soilNotify();renderSoilDerived();}));
@@ -643,42 +645,42 @@ function renderSoilDerived(){
     </div>
     <p style="font-size:0.86rem;color:var(--ink-mute);margin:12px 0 4px">A talp alatti réteg jellemzői: φ′ = ${fmt(bl.phi,1)}° · c′ = ${fmt(bl.c,1)} kPa · c<sub>u</sub> = ${fmt(bl.cu,1)} kPa · E = ${fmt(bl.E,1)} MPa</p>
     <table class="dt num" style="margin-top:8px">
-      <thead><tr><th>Réteg</th><th>Mélységköz</th><th>σ_v [kPa]</th><th>u [kPa]</th><th>σ′_v [kPa]</th></tr></thead>
+      <thead><tr><th>Réteg</th><th>Mélységköz</th><th>σ<sub>v</sub> [kPa]</th><th>u [kPa]</th><th>σ′<sub>v</sub> [kPa]</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
     <p style="font-size:0.8rem;color:var(--ink-mute)">A feszültségek a réteghatárok alján (talp alatti réteg az alapsík alatt közvetlenül). q′ és q0 a kiválasztott D = ${fmt(SOIL.D,2)} m mélységre vonatkozik; talajvízszint = ${fmt(SOIL.gw,2)} m.</p>
   </div>`;
 }
-function dBox(lab,val,acc){return `<div style="background:#F3EEE6;padding:12px 14px;border-radius:8px;border-left:3px solid ${acc}"><div style="font-size:0.7rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.04em">${lab}</div><div style="font-family:'JetBrains Mono';font-size:1.1rem;color:var(--steel-dk);font-weight:600;margin-top:3px">${val}</div></div>`;}
+function dBox(lab,val,acc){return `<div style="background:#F3EEE6;padding:12px 14px;border-radius:8px;border-left:3px solid ${acc}"><div style="font-size:0.7rem;color:var(--ink-mute);text-transform:uppercase;letter-spacing:0.04em">${S(lab)}</div><div style="font-family:'JetBrains Mono';font-size:1.1rem;color:var(--steel-dk);font-weight:600;margin-top:3px">${S(val)}</div></div>`;}
 
 /* ===================== KALKULÁTOR-KERETRENDSZER ===================== */
 /* config: {id,title,tag,color,inputs:[{k,label,small,val,step,type,options}],compute(g)->{rows,formula,verdict,boxes},note,usesSoil} */
 function mkCalc(c){
   const host=document.getElementById('calc-'+c.id); if(!host)return;
   const inpHTML=c.inputs.map(f=>{
-    if(f.sep)return `<div class="cr-sep">${f.sep}</div>`;
-    const lab=`<label>${f.label}${f.small?`<small>${f.small}</small>`:''}</label>`;
-    if(f.type==='select')return `<div class="cr"><div>${lab}</div><select id="${c.id}__${f.k}">${f.options.map(o=>`<option value="${o.v}">${o.t}</option>`).join('')}</select></div>`;
+    if(f.sep)return `<div class="cr-sep">${S(f.sep)}</div>`;
+    const lab=`<label>${S(f.label)}${f.small?`<small>${S(f.small)}</small>`:''}</label>`;
+    if(f.type==='select')return `<div class="cr"><div>${lab}</div><select id="${c.id}__${f.k}">${f.options.map(o=>`<option value="${o.v}">${S(o.t)}</option>`).join('')}</select></div>`;
     return `<div class="cr"><div>${lab}</div><input id="${c.id}__${f.k}" type="number" value="${f.val}" step="${f.step||'any'}"></div>`;
   }).join('');
   host.innerHTML=`
-  <div class="calc-head"><h3>${c.title}</h3><span class="calc-tag" style="background:${c.color||'var(--rebar)'}">${c.tag||''}</span></div>
+  <div class="calc-head"><h3>${S(c.title)}</h3><span class="calc-tag" style="background:${c.color||'var(--rebar)'}">${c.tag||''}</span></div>
   <div class="calc-body">
     <div class="grid c2">
       <div>${inpHTML}</div>
       <div><div class="calc-results" id="${c.id}__res"></div></div>
     </div>
-    ${c.note?`<p class="calc-note">${c.note}</p>`:''}
+    ${c.note?`<p class="calc-note">${S(c.note)}</p>`:''}
   </div>`;
   // set select defaults
   c.inputs.forEach(f=>{if(f.type==='select'){const e=document.getElementById(c.id+'__'+f.k);if(e&&f.val!==undefined)e.value=f.val;}});
   const g=k=>{const e=document.getElementById(c.id+'__'+k);if(!e)return 0;return e.tagName==='SELECT'?e.value:(parseFloat(e.value)||0);};
   function run(){
     let r;try{r=c.compute(g);}catch(e){console.error(e);r={rows:[['Hiba','—']]};}
-    let h=`<h4>${r.title||'Eredmény'}</h4>`;
+    let h=`<h4>${S(r.title||'Eredmény')}</h4>`;
     if(r.boxes)h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">${r.boxes.map(b=>dBox(b[0],b[1],b[2]||'var(--steel)')).join('')}</div>`;
     (r.rows||[]).forEach(x=>h+=rr(x[0],x[1],x[2]));
-    if(r.formula)h+=`<div class="calc-formula">${r.formula}</div>`;
+    if(r.formula)h+=`<div class="calc-formula">${S(r.formula)}</div>`;
     if(r.verdict)h+=vbox(r.verdict.ok,r.verdict.line);
     document.getElementById(c.id+'__res').innerHTML=h;
   }
