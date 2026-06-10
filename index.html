@@ -268,16 +268,6 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
 
 <!-- ===================== TEHERBÍRÁS ===================== -->
 <div class="chapter-page" id="page-teherbiras" data-ch="teherbiras">
-  <section class="subsection" id="b-1">
-    <h2>Drénezetlen teherbírás <span class="refbadge">§5.5.2.1 (5.1)</span></h2>
-    <p>Gyors terhelésnél / telített kötött talajnál teljes feszültségekkel, a drénezetlen nyírószilárdsággal (c<sub>u</sub>, φ=0) számolunk. A felhajtóerő kedvező hatása <b>nem</b> vehető figyelembe.</p>
-    <div class="callout formula" style="text-align:center">
-      R<sub>Nu</sub> = A′·[ N<sub>cu</sub>·c<sub>u</sub>·b<sub>cu</sub>·d<sub>cu</sub>·g<sub>cu</sub>·i<sub>cu</sub>·s<sub>cu</sub> + q<sub>0</sub> ] &nbsp;&nbsp;N<sub>cu</sub> = π+2 ≈ 5,14 &nbsp;<span style="color:var(--ink-mute)">(5.1 · B.1)</span>
-    </div>
-    <p style="font-size:0.9rem;color:var(--ink-mute)">A tényezők (B.2): b<sub>cu</sub>=1−2α/(π+2) · d<sub>cu</sub>=1+0,33·arctan(D<sub>f</sub>/B) · g<sub>cu</sub>=max(1−2β/(π+2);0) · i<sub>cu</sub>=½(1+√(1−H/(A′c<sub>u</sub>))) · s<sub>cu</sub>=1+0,2(B′/L′) [kör: 1,2]</p>
-    <div class="calc" id="calc-bear-ud"></div>
-  </section>
-
   <section class="subsection" id="b-2">
     <h2>Drénezett teherbírás <span class="refbadge">§5.5.2.1 (5.5)</span></h2>
     <p>Lassú terhelésnél / szemcsés talajnál hatékony feszültségekkel, a φ′–c′ értékpárral. A teherbírás három tagból áll (kohéziós, mélységi, szélességi):</p>
@@ -289,6 +279,16 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
     </div>
     <div class="calc" id="calc-bear-dr"></div>
     <div class="callout note" id="bear-factors-note"></div>
+  </section>
+
+  <section class="subsection" id="b-1">
+    <h2>Drénezetlen teherbírás <span class="refbadge">§5.5.2.1 (5.1)</span></h2>
+    <p>Gyors terhelésnél / telített kötött talajnál teljes feszültségekkel, a drénezetlen nyírószilárdsággal (c<sub>u</sub>, φ=0) számolunk. A felhajtóerő kedvező hatása <b>nem</b> vehető figyelembe.</p>
+    <div class="callout formula" style="text-align:center">
+      R<sub>Nu</sub> = A′·[ N<sub>cu</sub>·c<sub>u</sub>·b<sub>cu</sub>·d<sub>cu</sub>·g<sub>cu</sub>·i<sub>cu</sub>·s<sub>cu</sub> + q<sub>0</sub> ] &nbsp;&nbsp;N<sub>cu</sub> = π+2 ≈ 5,14 &nbsp;<span style="color:var(--ink-mute)">(5.1 · B.1)</span>
+    </div>
+    <p style="font-size:0.9rem;color:var(--ink-mute)">A tényezők (B.2): b<sub>cu</sub>=1−2α/(π+2) · d<sub>cu</sub>=1+0,33·arctan(D<sub>f</sub>/B) · g<sub>cu</sub>=max(1−2β/(π+2);0) · i<sub>cu</sub>=½(1+√(1−H/(A′c<sub>u</sub>))) · s<sub>cu</sub>=1+0,2(B′/L′) [kör: 1,2]</p>
+    <div class="calc" id="calc-bear-ud"></div>
   </section>
 
   <section class="subsection" id="b-3">
@@ -526,7 +526,7 @@ const CHAPTERS = [
   {id:'bevezetes', label:'Bevezetés', subsections:[{id:'bev-1',label:'Használat'},{id:'bev-2',label:'Tervezés alapja'}]},
   {id:'talaj', label:'Talajszelvény', subsections:[]},
   {id:'geometria', label:'Geometria', subsections:[{id:'g-1',label:'Hatékony km.'},{id:'g-2',label:'Kör alap'},{id:'g-3',label:'Tervezési méret'},{id:'g-4',label:'SLS külpont.'}]},
-  {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-1',label:'Drénezetlen'},{id:'b-2',label:'Drénezett'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-6',label:'Ménard'},{id:'b-7',label:'Szikla'}]},
+  {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-2',label:'Drénezett'},{id:'b-1',label:'Drénezetlen'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-6',label:'Ménard'},{id:'b-7',label:'Szikla'}]},
   {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-1',label:'Drénezetlen'},{id:'c-2',label:'Drénezett'},{id:'c-3',label:'VC4'}]},
   {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-2',label:'Ménard'},{id:'s-3',label:'CPT'}]},
   {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'},{id:'i-4',label:'Feltárás'}]},
