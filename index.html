@@ -599,7 +599,7 @@ function renderSoilProfile(){
     rows+=`<tr data-i="${i}">`;
     rows+=`<td style="text-align:center;font-weight:600;color:var(--steel-dk)">${i+1}</td>`;
     cols.forEach(([k,,t])=>{
-      rows+=`<td><input data-i="${i}" data-k="${k}" type="${t==='num'?'number':'text'}" value="${L[k]}" step="any" style="width:100%;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
+      rows+=`<td><input data-i="${i}" data-k="${k}" type="${t==='num'?'number':'text'}" value="${L[k]}" step="${k==='t'?'0.1':'any'}" style="width:100%;border:1px solid var(--line-strong);border-radius:5px;padding:4px 6px;font-family:${t==='num'?"'JetBrains Mono'":"'Inter'"};font-size:0.82rem;text-align:${t==='num'?'right':'left'};background:var(--calc-input)"></td>`;
     });
     rows+=`<td style="text-align:center"><button data-del="${i}" style="background:var(--rebar);color:#fff;border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;font-weight:700" title="Réteg törlése">×</button></td>`;
     rows+='</tr>';
