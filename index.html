@@ -439,7 +439,7 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
   </section>
 
   <section class="subsection" id="i-3">
-    <h2>Elcsúszás igazolás <span class="refbadge">§5.6.4 (5.12)</span></h2>
+    <h2>Elcsúszás igazolása <span class="refbadge">§5.6.4 (5.12)</span></h2>
     <div class="callout formula" style="text-align:center">T<sub>d</sub> ≤ R<sub>Td,base</sub> + R<sub>Td,face</sub> &nbsp;(5.12)</div>
     <div class="calc" id="calc-ver-slide"></div>
   </section>
@@ -1077,7 +1077,7 @@ mkCalc({id:'ver-bear',title:'Teherbírás igazolása N_d ≤ R_Nd (5.9)',tag:'5.
       verdict:{ok,line:`N_d = ${fmt(Nd,0)} kN ${ok?'≤':'>'} R_Nd = ${fmt(RNd,0)} kN`}};
   }});
 
-mkCalc({id:'ver-slide',title:'Elcsúszás igazolás T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
+mkCalc({id:'ver-slide',title:'Elcsúszás igazolása T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
   inputs:[{k:'Hk',label:'H_k vízszintes erő',val:120,step:5},{k:'gQ',label:'γ_Q (hajtó teher)',val:1.5,step:0.05},{k:'Rbase',label:'R_Td,base talpellenállás [kN]',val:300,step:5},{k:'Rface',label:'R_Td,face homlokellenállás [kN]',val:0,step:5}],
   compute:g=>{const Td=g('gQ')*g('Hk');const Rd=g('Rbase')+g('Rface');const ok=Td<=Rd;
     return{boxes:[['T_d hajtó erő',fmt(Td,0)+' kN','var(--rebar)'],['R_Td ellenállás',fmt(Rd,0)+' kN','var(--moss)']],
