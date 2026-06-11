@@ -432,14 +432,14 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
   </section>
 
   <section class="subsection" id="i-2">
-    <h2>Teherbírási igazolás <span class="refbadge">§5.6.3 (5.9)</span></h2>
+    <h2>Teherbírás igazolása <span class="refbadge">§5.6.3 (5.9)</span></h2>
     <div class="callout formula" style="text-align:center">N<sub>d</sub> ≤ R<sub>Nd</sub> &nbsp;(5.9)</div>
     <p>A teljes teherbírási igazolás a <b>Teherbírás</b> fejezet drénezett/drénezetlen kalkulátoraiban közvetlenül elvégezhető (MFA/RFA választással, a talajszelvényből). Itt egy összegző ellenőrző:</p>
     <div class="calc" id="calc-ver-bear"></div>
   </section>
 
   <section class="subsection" id="i-3">
-    <h2>Elcsúszási igazolás <span class="refbadge">§5.6.4 (5.12)</span></h2>
+    <h2>Elcsúszás igazolás <span class="refbadge">§5.6.4 (5.12)</span></h2>
     <div class="callout formula" style="text-align:center">T<sub>d</sub> ≤ R<sub>Td,base</sub> + R<sub>Td,face</sub> &nbsp;(5.12)</div>
     <div class="calc" id="calc-ver-slide"></div>
   </section>
@@ -498,7 +498,7 @@ const CHAPTERS = [
   {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-2',label:'Drénezett'},{id:'b-1',label:'Drénezetlen'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-7',label:'Szikla'}]},
   {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-2',label:'Drénezett'},{id:'c-1',label:'Drénezetlen'},{id:'c-3',label:'VC4'}]},
   {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-3',label:'CPT'}]},
-  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'}]},
+  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális tényezők'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'}]},
   {id:'merevseg', label:'Merevség & rugók', subsections:[{id:'m-1',label:'Relatív mer.'},{id:'m-2',label:'Ágyazási t.'},{id:'m-3',label:'Rugók'}]},
 ];
 function setChapter(chId){
@@ -1069,7 +1069,7 @@ mkCalc({id:'set-cpt',title:'Süllyedés CPT-ből — Schmertmann (B.13/B.14)',ta
       formula:'s = C₁·C₂·C₃·(q−σ′_vp)·Σ(I_z/E′)Δz · I_z,max = 0,5+0,1√[(q−σ′_vp)/σ′_v0]'};
   }});
 /* ========== IGAZOLÁSOK ========== */
-mkCalc({id:'ver-bear',title:'Teherbírási igazolás N_d ≤ R_Nd (5.9)',tag:'5.9',color:'var(--moss)',
+mkCalc({id:'ver-bear',title:'Teherbírás igazolása N_d ≤ R_Nd (5.9)',tag:'5.9',color:'var(--moss)',
   inputs:[{k:'Gk',label:'G_k állandó',val:600,step:10},{k:'Qk',label:'Q_k esetleges',val:200,step:10},{k:'gG',label:'γ_G',val:1.35,step:0.05},{k:'gQ',label:'γ_Q',val:1.5,step:0.05},{k:'RNd',label:'R_Nd tervezési teherbírás [kN]',small:'a Teherbírás fejezetből',val:1300,step:10}],
   compute:g=>{const Nd=g('gG')*g('Gk')+g('gQ')*g('Qk');const RNd=g('RNd');const ok=Nd<=RNd;
     return{boxes:[['N_d tervezési teher',fmt(Nd,0)+' kN','var(--rebar)'],['R_Nd ellenállás',fmt(RNd,0)+' kN','var(--moss)']],
@@ -1077,7 +1077,7 @@ mkCalc({id:'ver-bear',title:'Teherbírási igazolás N_d ≤ R_Nd (5.9)',tag:'5.
       verdict:{ok,line:`N_d = ${fmt(Nd,0)} kN ${ok?'≤':'>'} R_Nd = ${fmt(RNd,0)} kN`}};
   }});
 
-mkCalc({id:'ver-slide',title:'Elcsúszási igazolás T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
+mkCalc({id:'ver-slide',title:'Elcsúszás igazolás T_d ≤ R_Td (5.12)',tag:'5.12',color:'var(--moss)',
   inputs:[{k:'Hk',label:'H_k vízszintes erő',val:120,step:5},{k:'gQ',label:'γ_Q (hajtó teher)',val:1.5,step:0.05},{k:'Rbase',label:'R_Td,base talpellenállás [kN]',val:300,step:5},{k:'Rface',label:'R_Td,face homlokellenállás [kN]',val:0,step:5}],
   compute:g=>{const Td=g('gQ')*g('Hk');const Rd=g('Rbase')+g('Rface');const ok=Td<=Rd;
     return{boxes:[['T_d hajtó erő',fmt(Td,0)+' kN','var(--rebar)'],['R_Td ellenállás',fmt(Rd,0)+' kN','var(--moss)']],
