@@ -444,18 +444,6 @@ figcaption{font-size:0.82rem;color:var(--ink-mute);text-align:center;margin-top:
     <div class="calc" id="calc-ver-slide"></div>
   </section>
 
-  <section class="subsection" id="i-4">
-    <h2>Minimális feltárási mélység <span class="refbadge">Táblázat 5.1 (NDP)</span></h2>
-    <table class="dt">
-      <thead><tr><th>Alaptípus</th><th>Minimális mélység d<sub>min</sub></th></tr></thead>
-      <tbody>
-        <tr><td>Négyzetes / kör alap</td><td>max{3·B; 6 m}</td></tr>
-        <tr><td>Sávalap</td><td>max{5·B; 6 m}</td></tr>
-        <tr><td>Lemezalap / alapcsoport</td><td>max{1,5·B; 6 m}</td></tr>
-      </tbody>
-    </table>
-    <div class="calc" id="calc-ver-dmin"></div>
-  </section>
 </div>
 
 <!-- ===================== MEREVSÉG & RUGÓK ===================== -->
@@ -510,7 +498,7 @@ const CHAPTERS = [
   {id:'teherbiras', label:'Teherbírás', subsections:[{id:'b-2',label:'Drénezett'},{id:'b-1',label:'Drénezetlen'},{id:'b-3',label:'Talajvíz'},{id:'b-4',label:'Réteghatár'},{id:'b-5',label:'Átszúródás'},{id:'b-7',label:'Szikla'}]},
   {id:'csuszas', label:'Elcsúszás', subsections:[{id:'c-0',label:'Áttekintés'},{id:'c-2',label:'Drénezett'},{id:'c-1',label:'Drénezetlen'},{id:'c-3',label:'VC4'}]},
   {id:'sullyedes', label:'Süllyedés', subsections:[{id:'s-1',label:'Rugalmas'},{id:'s-3',label:'CPT'}]},
-  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'},{id:'i-4',label:'Feltárás'}]},
+  {id:'igazolas', label:'Igazolások', subsections:[{id:'i-1',label:'Parciális t.'},{id:'i-2',label:'Teherbírás'},{id:'i-3',label:'Elcsúszás'}]},
   {id:'merevseg', label:'Merevség & rugók', subsections:[{id:'m-1',label:'Relatív mer.'},{id:'m-2',label:'Ágyazási t.'},{id:'m-3',label:'Rugók'}]},
 ];
 function setChapter(chId){
@@ -1095,14 +1083,6 @@ mkCalc({id:'ver-slide',title:'Elcsúszási igazolás T_d ≤ R_Td (5.12)',tag:'5
     return{boxes:[['T_d hajtó erő',fmt(Td,0)+' kN','var(--rebar)'],['R_Td ellenállás',fmt(Rd,0)+' kN','var(--moss)']],
       rows:[['Talp + homlok',fmt(g('Rbase'),0)+' + '+fmt(g('Rface'),0)+' kN','subtle'],['Kihasználtság',fmt(Rd>0?Td/Rd*100:999,0)+' %']],
       verdict:{ok,line:`T_d = ${fmt(Td,0)} kN ${ok?'≤':'>'} R_Td = ${fmt(Rd,0)} kN`}};
-  }});
-
-mkCalc({id:'ver-dmin',title:'Minimális feltárási mélység (Táblázat 5.1)',tag:'5.1',color:'var(--moss)',
-  inputs:[{k:'type',label:'Alaptípus',type:'select',val:'sq',options:[{v:'sq',t:'Négyzetes / kör alap (3·B)'},{v:'strip',t:'Sávalap (5·B)'},{v:'raft',t:'Lemez / alapcsoport (1,5·B)'}]},{k:'B',label:'B szélesség [m]',val:1.6,step:0.05}],
-  compute:g=>{const B=g('B');const fac={sq:3,strip:5,raft:1.5}[g('type')];const dmin=Math.max(fac*B,6);
-    return{boxes:[['d_min minimális mélység',fmt(dmin,2)+' m','var(--rebar)']],
-      rows:[[fac+'·B',fmt(fac*B,2)+' m','subtle'],['6 m minimum','6,00 m','subtle']],
-      formula:`d_min = max{${fac}·B; 6 m} = max{${fmt(fac*B,2)}; 6} = ${fmt(dmin,2)} m`};
   }});
 
 /* ========== MEREVSÉG & RUGÓK ========== */
