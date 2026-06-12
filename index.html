@@ -1139,7 +1139,8 @@ setChapter(CHAPTERS.find(c=>c.id===initCh)?initCh:'bevezetes');
   function units(s){return s.replace(/(\d) (?=(?:kPa|MPa|GPa|kN\/m³|kN\/m²|kN|m³|m²|m\/s|cm|mm|km|kg|°C|°|%|m|t|óra|nap|hét|hónap|év)(?:[\s.,;:!?)\]–—]|$))/g,'$1'+NBSP);}
   function shortWords(s){return s.replace(/(^|[\s(„"'»–—])(a|az|s|e|é|és|is)(?: )(?=\S)/gi,'$1$2'+NBSP);}
   function dashes(s){return s.replace(/([0-9A-Za-zÀ-ÿ])([-–—])([0-9A-Za-zÀ-ÿ])/g,'$1'+WJ+'$2'+WJ+'$3');}
-  function fix(s){return dashes(units(math(shortWords(s))));}
+  function sentenceStart(s){return s.replace(/([.!?…][)"'»”’]?\s+\S+) (?=\S)/g,'$1'+NBSP);}
+  function fix(s){return dashes(units(math(shortWords(sentenceStart(s)))));}
   var SKIP={SCRIPT:1,STYLE:1,CODE:1,PRE:1,KBD:1,SAMP:1,INPUT:1,TEXTAREA:1,SELECT:1,OPTION:1,NOSCRIPT:1};
   function walk(el){
     for(var n=el.firstChild;n;n=n.nextSibling){
